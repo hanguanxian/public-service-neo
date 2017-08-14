@@ -26,13 +26,10 @@
     import Readme from '../page/Readme.vue';
     import RoleAppVersion from '../page/RoleAppVersion.vue';
     import RoleExamineAppVersion from '../page/RoleExamineAppVersion.vue';
-
-    // import RoleActTargetRate from '../page/RoleActTargetRate.vue';
-    // import RoleRegularDqtarget from '../page/RoleRegularDqtarget.vue';
-    // import RoleRegularDqtargetExamine from '../page/RoleRegularDqtargetExamine.vue';
-    // import RolePaymentWithdrawConfig from '../page/RolePaymentWithdrawConfig.vue';
-    // import RolePaymentOrder from '../page/RolePaymentOrder.vue';
-    // import RolePaymentOrderSplit from '../page/RolePaymentOrderSplit.vue';
+    import RoleAnnouncement from '../page/RoleAnnouncement.vue';
+    import RoleAnnouncementPosition from '../page/RoleAnnouncementPosition.vue';
+    import RoleBanner from '../page/RoleBanner.vue';
+    import RoleBannerPosition from '../page/RoleBannerPosition.vue';
     export default {
         data () {
           	return {
@@ -56,13 +53,10 @@
             'readme' : Readme,
             'roleappversion':RoleAppVersion,
             'roleexamineappversion' : RoleExamineAppVersion,
-
-            // 'roleacttargetrate' : RoleActTargetRate,
-            // 'roleregulardqtarget' : RoleRegularDqtarget,
-            // 'roleregulardqtargetexamine' : RoleRegularDqtargetExamine,
-            // 'rolepaymentwithdrawconfig' : RolePaymentWithdrawConfig,
-            // 'rolepaymentorder':RolePaymentOrder,
-            // 'rolepaymentordersplit' : RolePaymentOrderSplit
+            'roleannouncement' : RoleAnnouncement,
+            'roleannouncementposition' : RoleAnnouncementPosition,
+            'rolebanner' : RoleBanner,
+            'rolebannerposition' : RoleBannerPosition
         },
         methods: {
     	    removeTab(targetIndex) {

@@ -36,7 +36,7 @@
                   </el-select>
             </template>
             <template v-else-if="item.type == 'textarea'">
-                  <el-input type="textarea" :rows="2" v-model="baseForm[item.key]" :placeholder="options.showPlaceholder == false ? '' : item.placeholder"></el-input>
+                  <el-input type="textarea" :rows="item.row || 2" v-model="baseForm[item.key]" :placeholder="options.showPlaceholder == false ? '' : item.placeholder"></el-input>
             </template>
             <template v-else>
                   <el-input v-model="baseForm[item.key]" :placeholder="options.showPlaceholder == false ? '' : item.placeholder"></el-input>

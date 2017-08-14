@@ -22,31 +22,19 @@ export default new Router({
         {
           path: '/roleexamineappversion',
           component: resolve => require(['../components/page/RoleExamineAppVersion.vue'], resolve)
-        }//,
-        // {
-        //   path: '/roleacttargetrate',
-        //   component: resolve => require(['../components/page/RoleActTargetRate.vue'], resolve) // vue-datasource组件
-        // },
-        // {
-        //   path: '/roleregulardqtarget',
-        //   component: resolve => require(['../components/page/RoleRegularDqtarget.vue'], resolve) // Vue-Quill-Editor组件
-        // },
-        // {
-        //   path: '/roleregulardqtargetexamine',
-        //   component: resolve => require(['../components/page/RoleRegularDqtargetExamine.vue'], resolve) // Vue-Quill-Editor组件
-        // },
-        // {
-        //   path: '/rolepaymentwithdrawconfig',
-        //   component: resolve => require(['../components/page/RolePaymentWithdrawConfig.vue'], resolve) // Vue-Core-Image-Upload组件
-        // },
-        // {
-        //   path: '/rolepaymentorder',
-        //   component: resolve => require(['../components/page/RolePaymentOrder.vue'], resolve) // vue-schart组件
-        // },
-        // {
-        //   path: '/rolepaymentordersplit',
-        //   component: resolve => require(['../components/page/RolePaymentOrderSplit.vue'], resolve) // 拖拽列表组件
-        // }
+        },{
+          path: '/roleannouncement',
+          component: resolve => require(['../components/page/RoleAnnouncement.vue'], resolve)
+        },{
+           path: '/roleannouncementposition',
+           component: resolve => require(['../components/page/RoleAnnouncementPosition.vue'], resolve) // Vue-Quill-Editor组件
+        },{
+           path: '/rolebanner',
+           component: resolve => require(['../components/page/RoleBanner.vue'], resolve) // Vue-Quill-Editor组件
+         },{
+           path: '/rolebannerposition',
+           component: resolve => require(['../components/page/RoleBannerPosition.vue'], resolve) // Vue-Core-Image-Upload组件
+        }
       ]
     },
     {

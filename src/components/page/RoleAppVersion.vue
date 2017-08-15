@@ -26,6 +26,7 @@
     <base-form :child-form-items="dialogForm.items"
                :child-form-options="dialogForm.options"
                :child-form-data="dialogFormData"
+               @cancelCallBack="dialogVisible = false"
                @submitCallBack="dialogCallBack">
     </base-form>
   </el-dialog>
@@ -129,6 +130,7 @@ export default {
         options: {
           submitUrl: "/interface/act/add_act_vip_append.do", //新建的链接
           submitRow: true,//提交按钮是否单独占一行
+          cancelBtnShow: true,
           defaultRules: {
             required: true,
             message: '必填',
@@ -195,15 +197,9 @@ export default {
             event(row) {
               console.log('编辑');
               console.log(row);
-              if(row.isOnsale!='否'){
- 			      self.$message.error('已上架活动不可以修改');
-         	  } else {
                   self.dialogVisible = true;
                   self.dialogForm.options.submitUrl = self.updateRowUrl;
-                  self.msg = "修改固收加息活动成功";
-                  let copyRow = JSON.stringify(row);
-                  self.dialogFormData = JSON.parse(copyRow);
-              }
+                  self.dialogFormData = JSON.parse(JSON.stringify(row));
             }
           },{
             name: "删除",
@@ -302,7 +298,6 @@ export default {
         page: self.tablePage,
         rows: self.tableRows,
       }).then((res) => {
-          console.log(res);
         this.tableData = res.data.rows;
       })
     },
@@ -315,11 +310,6 @@ export default {
     dialogCallBack(value) {//弹出框的提交事件
       console.log('dialogCallBack');
       const self = this;
-    //   let formData = new FormData();
-    //   for (let it in value) {
-    //     formData.append(it,value[it]);
-    //   }
-    //   let config = {headers: {'Content-Type': 'application/x-www-form-urlencoded'}};
 
       self.dialogVisible = false;
       self.$axios.post(self.dialogForm.options.submitUrl, self.$qs.stringify(value)).then((res) => {

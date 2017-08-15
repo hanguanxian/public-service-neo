@@ -229,6 +229,18 @@ export default {
     BaseTable //富文本组件
   },
   created() {
+      const self = this;
+      self.$axios.get('../../../static/project_list.json').then((res) => {
+          var selectOptions = res.data;
+          var tempArry = [];
+          for (var i = 0; i < selectOptions.length; i++) {
+              var select = {};
+              select.label = selectOptions[i].projectName;
+              select.value = selectOptions[i].projectId;
+              tempArry.push(select);
+          }
+          self.searchForm.items[1].selectOptions = tempArry;
+      })
       this.getTableData();
   },
   methods: {

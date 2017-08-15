@@ -51,7 +51,10 @@
           </el-form-item>
           <template v-if="options.submitRow">
               <el-form-item style="display: block; text-align: center;">
-                <el-button :icon="options.submitIcon" @click="onSubmit('baseForm')">{{ childFormOptions.submitName || '确定' }}</el-button>
+                   <div style="margin-left: -130px">
+                        <el-button :icon="options.submitIcon" @click="onSubmit('baseForm')">{{ childFormOptions.submitName || '确定' }}</el-button>
+                        <el-button v-if="options.cancelBtnShow" :icon="options.canselIcon" @click="onCancel('baseForm')">{{ childFormOptions.cancelName || '取消' }}</el-button>
+                    </div>
               </el-form-item>
           </template>
           <template v-else>
@@ -129,6 +132,10 @@ import { quillEditor } from 'vue-quill-editor';//富文本编辑器
                         }
                     }
                 })
+            },
+            onCancel(formName){
+                let self = this;
+                self.$emit('cancelCallBack');
             },
             onSubmit(formName) {//表单提交 会去掉多余的不在初始items里面的字段
                 let self = this;

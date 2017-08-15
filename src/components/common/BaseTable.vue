@@ -12,6 +12,34 @@
                     :highlight-current-row="true" >
           <el-table-column type="selection"></el-table-column> <!-- 勾选框 -->
           <el-table-column v-for="(column, index) in columns" :key="index" :prop="column.key" :label="column.name" :width="column.width">
+              <template scope="scope">
+                  <template v-if="column.type == 'image'">
+                      <a :href="scope.row[column.key]" target="_blank">
+                          <img :src="scope.row[column.key]" :title="scope.row[column.key]" :width="column.width == undefined ? '50px' : column.width">
+                      </a>
+                  </template>
+                  <template v-else-if="column.type == 'href' && scope.row[column.key]">
+                      <a :href="scope.row[column.key]" :title="scope.row[column.key]" target="_blank">{{ column.text || '打开链接'}}</a>
+                  </template>
+                  <template v-else-if="column.type == 'date' && scope.row[column.key]">
+                      {{ new Date(scope.row[column.key]).Format("yyyy-MM-dd") }}
+                  </template>
+                  <template v-else-if="column.type == 'datetime' && scope.row[column.key]">
+                      {{ new Date(scope.row[column.key]).Format("yyyy-MM-dd hh:mm:ss") }}
+                  </template>
+                  <template v-else-if="column.type == 'richText' && scope.row[column.key]">
+                      <el-popover trigger="hover" placement="top">
+                          <div>{{ column.name }}:</div>
+                          <div v-html="scope.row[column.key]">{{ scope.row[column.key] }}</div>
+                          <div slot="reference" class="name-wrapper">
+                            <el-tag>{{ scope.row[column.key].substring(0,10) + '......' }}</el-tag>
+                          </div>
+                      </el-popover>
+                  </template>
+                  <template v-else>
+                      {{ scope.row[column.key] }}
+                  </template>
+              </template>
           </el-table-column>
           <el-table-column :label="tableActions.name" :width="tableActions.width" :fixed="tableActions.fixed">
               <template scope="scope">

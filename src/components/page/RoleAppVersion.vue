@@ -163,9 +163,11 @@ export default {
           key: 'strIsMust'
         }, {
           name: '图片地址',
+          type: 'href',
           key: 'picUrl'
         }, {
           name: 'app地址',
+          type: 'href',
           key: 'appUrl'
         }, {
           name: '版本状态',
@@ -174,10 +176,12 @@ export default {
           key: 'appVersionState'
         }, {
           name: '版本备注',
+          type: 'richText',
+          width: '180px',
           key: 'remark'
         }, {
           name: '创建时间',
-          type: "date",
+          type: "datetime",
           key: 'createTime'
         }],
         tableActions: {

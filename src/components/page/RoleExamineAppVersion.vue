@@ -99,9 +99,11 @@ export default {
           key: 'strIsMust'
         }, {
           name: '图片地址',
+          type: 'href',
           key: 'picUrl'
         }, {
           name: 'app地址',
+          type: 'href',
           key: 'appUrl'
         }, {
           name: '版本状态',

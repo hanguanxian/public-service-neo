@@ -151,6 +151,7 @@ export default {
           key: 'contentShort'
         }, {
           name: '公告日期',
+          type: 'date',
           key: 'announcementDate'
         }, {
           name: '是否启用',

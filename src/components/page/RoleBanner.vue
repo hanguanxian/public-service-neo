@@ -161,6 +161,8 @@ export default {
           key: 'positionNames'
         }, {
           name: '图片',
+          type: 'image',
+          width: "100px",
           key: 'picSrc'
         }, {
           name: '版本编码',
@@ -170,6 +172,7 @@ export default {
           key: 'isAppOpen'
         }, {
           name: '外跳链接',
+          type: 'href',
           key: 'h5Url'
         }, {
           name: '安卓关键字',

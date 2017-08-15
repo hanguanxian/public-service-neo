@@ -111,6 +111,7 @@ export default {
         }, {
           name: '公告日期',
           type: 'date',
+          rules: {type: 'date',required: true,message: '必填',trigger: 'blur'},
           key: 'announcementDate'
         }, {
           name: '备注',

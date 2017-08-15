@@ -35,6 +35,13 @@
                         </el-option>
                   </el-select>
             </template>
+            <template v-else-if="item.type == 'file'">
+                <el-upload class="uploader" :multiple="false" :data="{key: item.key}" action="#"
+                    :http-request="addForm" >
+                    <el-button size="small" type="primary">点击上传</el-button>
+                    <div slot="tip" class="el-upload__tip"></div>
+                </el-upload>
+            </template>
             <template v-else-if="item.type == 'textarea'">
                   <el-input type="textarea" :rows="item.row || 2" v-model="baseForm[item.key]" :placeholder="options.showPlaceholder == false ? '' : item.placeholder"></el-input>
             </template>
@@ -120,6 +127,10 @@ Date.prototype.Format = function (fmt) { //时间format 函数
             daterangeChange(item){
                 this.baseForm[item.beginkey] = item.daterange[0];
                 this.baseForm[item.endkey] = item.daterange[1];
+            },
+            addForm(fileObj){
+                this.baseForm[fileObj.data.key] = fileObj.file
+                //return false;
             },
             setFormData(){//把time 类型的转换为标准时间格式
                 let self = this;

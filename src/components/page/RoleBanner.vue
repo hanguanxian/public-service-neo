@@ -100,6 +100,7 @@ export default {
         ]}, {
           name: '上传图片',
           type: 'file',
+          rules: { required: false },
           key: 'file'
         }, {name: '推送位置',placeholder: '推送位置',key: 'positionNames',type: 'select',
         selectOptions: [

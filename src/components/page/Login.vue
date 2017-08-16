@@ -21,10 +21,10 @@
     export default {
         data: function(){
             return {
-                formUrl:'/interface/index.do',
+                formUrl:'/interface/login',
                 ruleForm: {
-                    username: '',
-                    password: ''
+                    username: 'SteveJobs',
+                    password: '111111'
                 },
                 rules: {
                     username: [
@@ -41,10 +41,10 @@
                 const self = this;
                 self.$refs[formName].validate((valid) => {
                     if (valid) {
-                        //self.$axios.post(self.formUrl, self.ruleForm).then((res) => {
+                        self.$axios.post(self.formUrl, self.ruleForm).then((res) => {
                             localStorage.setItem('ms_username',self.ruleForm.username);
                             self.$router.push('/readme');
-                        //});
+                        });
                     } else {
                         console.log('error submit!!');
                         return false;

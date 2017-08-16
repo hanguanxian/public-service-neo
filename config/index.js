@@ -23,13 +23,13 @@ module.exports = {
   },
   dev: {
     env: require('./dev.env'),
-    port: 8080,
+    port: 80,
     autoOpenBrowser: true,
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: 'src',
     assetsPublicPath: '/',
     proxyTable: {
       '/interface': {
-        target: 'https://master-scbank-admin.51doro.com',
+        target: 'http://localhost:2000',
         changeOrigin: true,
         pathRewrite: {
           '^/interface': ''

@@ -36,8 +36,7 @@
                   </el-select>
             </template>
             <template v-else-if="item.type == 'file'">
-                <el-upload class="uploader" :multiple="false" :data="{key: item.key}" action="#"
-                    :http-request="addForm" >
+                <el-upload class="uploader" :multiple="false" :name="item.formNmae" :action="item.action">
                     <el-button size="small" type="primary">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip"></div>
                 </el-upload>
@@ -113,14 +112,16 @@ import { quillEditor } from 'vue-quill-editor';//富文本编辑器
             }
         },
         methods: {
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
             daterangeChange(item){
                 this.baseForm[item.beginkey] = item.daterange[0];
                 this.baseForm[item.endkey] = item.daterange[1];
             },
-            addForm(fileObj){
-                this.baseForm[fileObj.data.key] = fileObj.file
-                //return false;
-            },
+            // addForm(fileObj){
+            //     this.baseForm[fileObj.data.key] = fileObj.file
+            // },
             setFormData(){//把time 类型的转换为标准时间格式
                 let self = this;
                 self.items.filter(function(item) {

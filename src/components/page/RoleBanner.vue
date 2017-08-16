@@ -37,6 +37,7 @@
 import BaseForm from "../common/BaseForm.vue"
 import BaseTable from "../common/BaseTable.vue"
 import GroupBtns from "../common/GroupBtns.vue"
+var util = require('../../util/util.js');
 export default {
   data() {
     const self = this;
@@ -55,30 +56,19 @@ export default {
       searchForm: {
           items: [{name: '所属项目',placeholder: '所属项目', key: 'projectName',type: 'select',
           selectOptions:[
-              {label: "请选择",value: "-1"},
-              {label: "源码国际IOS",value: "yuanma_international_ios"},
-              {label: "源码私行IOS",value: "yuanma_domestic_ios"},
-              {label: "源码理财师IOS",value: "yuanma_planner_ios"},
-              {label: "源码国际Android",value: "yuanma_international_android"},
-              {label: "源码私行Android",value: "yuanma_domestic_android"},
-              {label: "源码理财师Android",value: "yuanma_planner_android"}
+              {"label":"源码私行","value":"yuanma_bank"},{"label":"多肉理财","value":"doro"},{"label":"源码理财师","value":"yuanma_planner"}
           ]}, {name: '推送位置',placeholder: '推送位置',key: 'positionNames',type: 'select',
-          selectOptions: [
-              {label: "请选择",value: "-1"},
-              {label: "编辑中",value: "0"},
-              {label: "审核中",value: "100"},
-              {label: "正式",value: "200"}
-          ]}, {
+          selectOptions: []},
+          {
             name: '版本编码',
             key: 'appVersionStr'
-        },{name: '是否显示:',placeholder: '是否显示:',key: 'isShow',type: 'select',
+          },{name: '是否显示:',placeholder: '是否显示:',key: 'isShow',type: 'select',
           selectOptions: [
-              {label: "请选择",value: "-1"},
               {label: "是",value: "是"},
               {label: "否",value: "否"}
           ]}],
         options: {
-          submitUrl: "/interface/act/act_vip_append_list.do", //新建的链接
+          submitUrl: "/interface/banner/banner_list", //新建的链接
           submitIcon: "search",//搜索按钮
           formClass: 'query-form', //向表单添加样式
           showLabel: false, //是否显示label标签
@@ -90,29 +80,21 @@ export default {
       dialogForm: {
         items: [{name: '所属项目',placeholder: '所属项目', key: 'projectName',type: 'select',
         selectOptions:[
-            {label: "请选择",value: "-1"},
-            {label: "源码国际IOS",value: "yuanma_international_ios"},
-            {label: "源码私行IOS",value: "yuanma_domestic_ios"},
-            {label: "源码理财师IOS",value: "yuanma_planner_ios"},
-            {label: "源码国际Android",value: "yuanma_international_android"},
-            {label: "源码私行Android",value: "yuanma_domestic_android"},
-            {label: "源码理财师Android",value: "yuanma_planner_android"}
+            {"label":"源码私行","value":"yuanma_bank"},{"label":"多肉理财","value":"doro"},{"label":"源码理财师","value":"yuanma_planner"}
         ]}, {
           name: '上传图片',
+          formNmae: 'imgUploader',
           type: 'file',
+          action: '/interface/banner/upload',
           rules: { required: false },
           key: 'file'
         }, {name: '推送位置',placeholder: '推送位置',key: 'positionNames',type: 'select',
+        selectOptions: []},
+        {name: '是否本地应用:',key: 'isAppOpen',type: 'select',
+        rules: {type: 'number',required: true,message: '必填',trigger: 'blur'},
         selectOptions: [
-            {label: "请选择",value: "-1"},
-            {label: "编辑中",value: "0"},
-            {label: "审核中",value: "100"},
-            {label: "正式",value: "200"}
-        ]}, {name: '是否本地打开:',key: 'isAppOpen',type: 'select',
-        selectOptions: [
-          {label: "请选择",value: "-1"},
-          {label: "是",value: "是"},
-          {label: "否",value: "否"}
+          {label: "是",value: 1},
+          {label: "否",value: 0}
         ]},{
           name: '外跳链接',
           key: 'h5Url'
@@ -127,13 +109,14 @@ export default {
             key: 'appVersionStr'
         }, {
             name: '排序',
+            rules: {type: 'number',required: true,message: '必填',trigger: 'blur'},
             key: 'sort'
         }, {
             name: '备注',
             key: 'remark'
         }],
         options: {
-          submitUrl: "/interface/act/add_act_vip_append.do", //新建的链接
+          submitUrl: "/interface/banner/create_banner", //新建的链接
           submitRow: true,//提交按钮是否单独占一行
           defaultRules: {
             required: true,
@@ -201,15 +184,16 @@ export default {
             event(row) {
               console.log('编辑');
               console.log(row);
-              if(row.isOnsale!='否'){
- 			      self.$message.error('已上架活动不可以修改');
-         	  } else {
-                  self.dialogVisible = true;
-                  self.dialogForm.options.submitUrl = self.updateRowUrl;
-                  self.msg = "修改固收加息活动成功";
-                  let copyRow = JSON.stringify(row);
-                  self.dialogFormData = JSON.parse(copyRow);
+              self.dialogVisible = true;
+              self.dialogForm.options.submitUrl = self.updateRowUrl;
+              self.msg = "修改固收加息活动成功";
+              if(row.isAppOpen) {
+                  row.isAppOpen = 1;
+              } else {
+                  row.isAppOpen = 0;
               }
+              let copyRow = JSON.stringify(row);
+              self.dialogFormData = JSON.parse(copyRow);
             }
           },{
             name: "删除",
@@ -244,11 +228,12 @@ export default {
             self.dialogVisible = true;
           }
       }],
-      dataListUrl: '../../../static/banner_list.json',
-      newRowUrl: '/interface/act/add_act_vip_append.do', //表格全部数据请求地址
-      updateRowUrl: "/interface/act/modify_act_vip_append.do", //更新列表的行链接
-      onsaleUrl: "/interface/act/modify_act_vip_append_onsale.do",
-      deleteRowUrl: "/interface/act/modify_act_vip_append_onsale.do", //更新列表的行链接
+      dataListUrl: '/interface/banner/banner_list',
+      newRowUrl: '/interface/banner/create_banner', //表格全部数据请求地址
+      updateRowUrl: "/interface/banner/edit_banner", //更新列表的行链接
+      unuseBannerUrl: "/interface/banner/unuse_banner",
+      useBannerUrl: "/interface/banner/use_banner",
+      deleteRowUrl: "/interface/banner/remove_banner", //更新列表的行链接
       dialogFormData: {},//弹出框formData
       searchFormData: {},
       selectedTableRows:[],//选中的table 行
@@ -265,26 +250,52 @@ export default {
     BaseTable //富文本组件
   },
   created() {
+      const self = this;
+      self.$axios.post('/interface/banner/project_list').then((res) => {
+          var selectOptions = util.arrayCamelCased(res.data.data);
+          var tempArry = [];
+          for (var i = 0; i < selectOptions.length; i++) {
+              var select = {};
+              select.label = selectOptions[i].projectName;
+              select.value = selectOptions[i].projectId;
+              tempArry.push(select);
+          }
+          //console.log(JSON.stringify(tempArry));
+          self.searchForm.items[0].selectOptions = tempArry;
+          self.dialogForm.items[0].selectOptions = tempArry;
+      })
+      self.$axios.post('/interface/banner/position_select_list',{projectId: 'yuanma_bank'}).then((res) => {
+          var selectOptions = util.arrayCamelCased(res.data.data);
+          var tempArry = [];
+          for (var i = 0; i < selectOptions.length; i++) {
+              var select = {};
+              select.label = selectOptions[i].positionName;
+              select.value = selectOptions[i].positionCode;
+              tempArry.push(select);
+          }
+          //console.log(JSON.stringify(tempArry));
+          self.searchForm.items[1].selectOptions = tempArry;
+          self.dialogForm.items[2].selectOptions = tempArry;
+      })
       this.getTableData();
   },
   methods: {
     searchCallBack(formData) {//搜索事件
       const self = this;
       console.log(formData);
-    //   let data = {
-    //     "actAutoId":"",
-    //     "isOnsale": formData.isOnsale || -1,
-    //     "startCreateTime": formData.beginDate || "",
-    //     "endCreateTime": formData.endDate || "",
-    //     page: self.tablePage,
-    //     rows: self.tableRows
-    //   }
-    //   self.$axios.post(self.searchForm.options.submitUrl, data).then((res) => {
-    //       console.log(res);
-    //       self.getTableData();
-    //   }).catch(function (error) {
-    //       self.$message.error('搜索失败');
-    //   });
+      let data = {
+        "projectId": formData.projectId|| "",
+        "appVersionStr": formData.appVersionStr || "",
+        "positionCodes": formData.positionCodes || "",
+        "isShow": formData.isShow || "",
+        page: self.tablePage,
+        rows: self.tableRows
+      }
+      self.$axios.post(self.searchForm.options.submitUrl, data).then((res) => {
+          self.tableData = util.arrayCamelCased(res.data.data.rows);
+      }).catch(function (error) {
+          self.$message.error('搜索错误');
+      });
     },
     pageChanged(value) {//翻页的事件
         this.tablePage = value;
@@ -292,12 +303,11 @@ export default {
     },
     getTableData() {//初始化表格数据
       const self = this;
-      self.$axios.get(self.dataListUrl, {
+      self.$axios.post(self.dataListUrl, {
         page: self.tablePage,
         rows: self.tableRows,
       }).then((res) => {
-          console.log(res);
-        this.tableData = res.data.rows;
+        this.tableData = util.arrayCamelCased(res.data.data.rows);
       })
     },
     cellClickd(value) {//选中单格的事件
@@ -308,6 +318,7 @@ export default {
     },
     dialogCallBack(value) {//弹出框的提交事件
       console.log('dialogCallBack');
+      console.log(value);
       const self = this;
 
       self.dialogVisible = false;

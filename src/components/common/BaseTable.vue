@@ -15,7 +15,7 @@
               <template scope="scope">
                   <template v-if="column.type == 'image'">
                       <a :href="scope.row[column.key]" target="_blank">
-                          <img :src="scope.row[column.key]" :title="scope.row[column.key]" :width="column.width == undefined ? '50px' : column.width">
+                          <img :src="scope.row[column.key]" :title="scope.row[column.key]" :width="column.imageWidth == undefined ? '50px' : column.imageWidth">
                       </a>
                   </template>
                   <template v-else-if="column.type == 'href' && scope.row[column.key]">

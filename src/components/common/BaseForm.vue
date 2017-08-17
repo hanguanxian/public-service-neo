@@ -36,10 +36,12 @@
                   </el-select>
             </template>
             <template v-else-if="item.type == 'file'">
-                <el-upload class="uploader" :multiple="false" :name="item.formNmae" :action="item.action">
+                <el-upload class="uploader" :name="item.formNmae"
+                    :on-change="fileChange(index)" :data="{keys:item.key}" :action="item.action" :on-success="handleSuccess">
                     <el-button size="small" type="primary">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip"></div>
                 </el-upload>
+                <!-- <el-input v-model="baseForm[item.key]" style="display: none;"></el-input> -->
             </template>
             <template v-else-if="item.type == 'textarea'">
                   <el-input type="textarea" :rows="item.row || 2" v-model="baseForm[item.key]" :placeholder="options.showPlaceholder == false ? '' : item.placeholder"></el-input>
@@ -119,9 +121,19 @@ import { quillEditor } from 'vue-quill-editor';//富文本编辑器
                 this.baseForm[item.beginkey] = item.daterange[0];
                 this.baseForm[item.endkey] = item.daterange[1];
             },
-            // addForm(fileObj){
-            //     this.baseForm[fileObj.data.key] = fileObj.file
-            // },
+            fileChange(index){
+                this.items[index].active = true;
+            },
+            handleSuccess(res, file, fileList){
+                //console.log(file);
+                let self = this;
+                self.items.filter(function(item,index) {
+                    if(item.active) {
+                        self.baseForm[item.key] = res.data.path;
+                        delete self.items[index].active;
+                    }
+                })
+            },
             setFormData(){//把time 类型的转换为标准时间格式
                 let self = this;
                 self.items.filter(function(item) {
@@ -158,9 +170,6 @@ import { quillEditor } from 'vue-quill-editor';//富文本编辑器
                       })
                       self.baseForm = form;
                       self.$emit('submitCallBack', form);
-                    //   self.$axios.post(self.childFormOptions.submitUrl, self.baseForm).then((res) => {
-                    //     self.$message.success('提交成功！');
-                    //   });
                   } else {
                     self.$message('请输入必填项!');
                     return false;

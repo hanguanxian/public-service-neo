@@ -13,7 +13,6 @@
         :child-table-options="tableConfig.tableOptions"
         :child-table-actions="tableConfig.tableActions"
         :child-table-data="tableData"
-        @cellClick="cellClickd"
         @pageChange="pageChanged">
         <!-- 顶部工具栏 -->
         <div slot="topBtns">
@@ -55,30 +54,24 @@ export default {
       //查询框配置
       searchForm: {
           items: [{name: '所属项目',placeholder: '所属项目', key: 'projectName',type: 'select',
-          selectOptions:[
-              {"label":"源码私行","value":"yuanma_bank"},{"label":"多肉理财","value":"doro"},{"label":"源码理财师","value":"yuanma_planner"}
-          ]}, {name: '推送位置',placeholder: '推送位置',key: 'positionNames',type: 'select',
-          selectOptions: []},
-          {
-            name: '版本编码',
-            key: 'appVersionStr'
-          },{name: '是否显示:',placeholder: '是否显示:',key: 'isShow',type: 'select',
-          selectOptions: [
-              {label: "是",value: "是"},
-              {label: "否",value: "否"}
-          ]}],
+                  selectOptions:[{"label":"源码私行","value":"yuanma_bank"},{"label":"多肉理财","value":"doro"},{"label":"源码理财师","value":"yuanma_planner"}]
+          },
+          {name: '推送位置',placeholder: '推送位置',key: 'positionNames',type: 'select',selectOptions: []},
+          {name: '版本编码',placeholder: '版本编码',key: 'appVersionStr'},
+          {name: '是否显示:',placeholder: '是否显示:',key: 'isShow',type: 'select',selectOptions: [{label: "是",value: "是"},{label: "否",value: "否"}]}
+        ],
         options: {
-          submitUrl: "/interface/banner/banner_list", //新建的链接
-          submitIcon: "search",//搜索按钮
-          formClass: 'query-form', //向表单添加样式
-          showLabel: false, //是否显示label标签
-          inline: true, //输入框是否在一行内
-          submitName: '搜索' //提交按钮文字
+            submitUrl: "/interface/banner/banner_list", //新建的链接
+            submitIcon: "search",//搜索按钮
+            formClass: 'query-form', //向表单添加样式
+            showLabel: false, //是否显示label标签
+            inline: true, //输入框是否在一行内
+            submitName: '搜索' //提交按钮文字
         }
       },
       //弹出框配置
       dialogForm: {
-        items: [{name: '所属项目',placeholder: '所属项目', key: 'projectName',type: 'select',
+        items: [{name: '所属项目',placeholder: '所属项目', key: 'projectId',type: 'select',
         selectOptions:[
             {"label":"源码私行","value":"yuanma_bank"},{"label":"多肉理财","value":"doro"},{"label":"源码理财师","value":"yuanma_planner"}
         ]}, {
@@ -86,9 +79,8 @@ export default {
           formNmae: 'imgUploader',
           type: 'file',
           action: '/interface/banner/upload',
-          rules: { required: false },
-          key: 'file'
-        }, {name: '推送位置',placeholder: '推送位置',key: 'positionNames',type: 'select',
+          key: 'picSrc'
+      }, {name: '推送位置',placeholder: '推送位置',key: 'positionCodes',type: 'select',
         selectOptions: []},
         {name: '是否本地应用:',key: 'isAppOpen',type: 'select',
         rules: {type: 'number',required: true,message: '必填',trigger: 'blur'},
@@ -109,6 +101,7 @@ export default {
             key: 'appVersionStr'
         }, {
             name: '排序',
+            type: 'number',
             rules: {type: 'number',required: true,message: '必填',trigger: 'blur'},
             key: 'sort'
         }, {
@@ -145,7 +138,6 @@ export default {
         }, {
           name: '图片',
           type: 'image',
-          width: "100px",
           key: 'picSrc'
         }, {
           name: '版本编码',
@@ -199,19 +191,40 @@ export default {
             name: "删除",
             icon: "fa-trash-o",
             event(row) {
-
+                self.$axios.post("/interface/banner/remove_banner", {autoId: row.autoId}).then((res) => {
+                    if(res.data.flag == true) {
+                        self.$message.success('删除成功');
+                        this.getTableData();
+                    }
+                }).catch(function(error) {
+                    self.$message.error('错误');
+                });
             }
           },{
             name: "启用",
             icon: "fa-check",
             event(row) {
-
+                self.$axios.post("/interface/banner/use_banner", {autoId: row.autoId}).then((res) => {
+                    if(res.data.flag == true) {
+                        self.$message.success('启用成功');
+                        this.getTableData();
+                    }
+                }).catch(function(error) {
+                    self.$message.error('错误');
+                });
             }
           }, {
             name: "禁用",
             icon: "fa-close",
             event(row) {
-
+                self.$axios.post("/interface/banner/unuse_banner", {autoId: row.autoId}).then((res) => {
+                    if(res.data.flag == true) {
+                        self.$message.success('禁用成功');
+                        this.getTableData();
+                    }
+                }).catch(function(error) {
+                    self.$message.error('错误');
+                });
             }
           }]
         },
@@ -310,22 +323,13 @@ export default {
         this.tableData = util.arrayCamelCased(res.data.data.rows);
       })
     },
-    cellClickd(value) {//选中单格的事件
-        console.log(value);
-        if(value) {
-            this.$message(value + '');
-        }
-    },
     dialogCallBack(value) {//弹出框的提交事件
-      console.log('dialogCallBack');
-      console.log(value);
       const self = this;
-
       self.dialogVisible = false;
-      self.$axios.post(self.dialogForm.options.submitUrl, self.$qs.stringify(value)).then((res) => {
+      self.$axios.post(self.dialogForm.options.submitUrl, self.$qs.stringify(self.dialogFormData)).then((res) => {
           self.$message.success(self.msg);
           this.getTableData();
-      }).catch(function (error) {
+      }).catch(function(error) {
           self.$message.error('失败');
       });
     }

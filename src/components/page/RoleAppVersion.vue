@@ -55,11 +55,11 @@ export default {
                 ]},
                 {name: '版本数值',placeholder: '版本数值',key: 'appVersionInt'},
                 {name: '版本编码',placeholder: '版本编码', key: 'appVersionStr'},
-                {name: '版本状态',placeholder: '请选择',key: 'appVersionState',type: 'select',
+                {name: '版本状态',placeholder: '请选择',key: 'enumAppVersionState',type: 'select',
                 selectOptions: [
-                    {label: "编辑中",value: "0"},
-                    {label: "审核中",value: "100"},
-                    {label: "正式",value: "200"}
+                    {label: "编辑中",value: 0},
+                    {label: "审核中",value: 100},
+                    {label: "正式",value: 200}
                 ]},
                 {name: '是否强制更新',placeholder: '是否强制更新',key: 'isMust',type: 'select',
                 selectOptions: [
@@ -209,9 +209,10 @@ export default {
             name: "提交审核",
             icon: "fa-clock-o",
             event(row) {
-                self.$axios.post("/interface/banner/examine_sys_app_version", {
+              console.log(row);
+                self.$axios.post(self.examineUrl, {
                   appVersionId: row.appVersionId,
-                  enumAppVersionState: row.appVersionState
+                  enumAppVersionState: row.enumAppVersionState
                 }).then((res) => {
                   if (res.data.status == true) {
                     self.$message.success('审核成功');
@@ -239,6 +240,7 @@ export default {
       newRowUrl: '/interface/sys-app-version/add_sys_app_version', //表格全部数据请求地址
       updateRowUrl: "/interface/sys-app-version/modify_sys_app_version", //更新列表的行链接
       deleteRowUrl: "/interface/sys-app-version/remove_sys_app_version", //更新列表的行链接
+      examineUrl: "/interface/sys-app-version/examine_sys_app_version", //提交审核链接
       dialogFormData: {},//弹出框formData
       searchFormData: {},
       selectedTableRows:[],//选中的table 行
@@ -261,20 +263,15 @@ export default {
     searchCallBack(formData) {//搜索事件
       const self = this;
       console.log(formData);
-    //   let data = {
-    //     "actAutoId":"",
-    //     "isOnsale": formData.isOnsale || -1,
-    //     "startCreateTime": formData.beginDate || "",
-    //     "endCreateTime": formData.endDate || "",
-    //     page: self.tablePage,
-    //     rows: self.tableRows
-    //   }
-    //   self.$axios.post(self.searchForm.options.submitUrl, data).then((res) => {
-    //       console.log(res);
-    //       self.getTableData();
-    //   }).catch(function (error) {
-    //       self.$message.error('搜索失败');
-    //   });
+
+      formData.page = 1;
+      formData.rows = self.tableRows;
+      self.$axios.post(self.searchForm.options.submitUrl, formData).then((res) => {
+          self.tableData = res.data.data.rows;
+          self.$message.success('搜索完成');
+      }).catch(function (error) {
+          self.$message.error('搜索失败');
+      });
     },
     pageChanged(value) {//翻页的事件
         this.tablePage = value;
@@ -286,7 +283,7 @@ export default {
         page: self.tablePage,
         rows: self.tableRows,
       }).then((res) => {
-        this.tableData = res.data.data.rows;
+        self.tableData = res.data.data.rows;
       })
     },
     dialogCallBack(value) {//弹出框的提交事件

@@ -30,16 +30,6 @@ export default {
   data() {
     const self = this;
     return {
-      // tableConfig 页面展示字段配置
-      //   name 页面字段显示的label文字
-      //   key  取值的key
-      //   insearch 是否在搜索框出现
-      //   inDialog 是否在弹出页面显示
-      //   type 字段输入时的类型 默认inpute  目前有 date select editor inpute
-      //   selectOptions 当type 为select的时候 option的枚举值
-      //   tableActions 表格里面的操作按钮以及事件
-      //   dialogActions 弹出框里面的操作按钮以及事件
-      //   useType 能被2整除 显示在表格 能被3整除显示在表格新建编辑列表页面 能被5整除显示在查询框
       //查询框配置
       searchForm: {
         items: [{
@@ -133,14 +123,8 @@ export default {
               message: '必填',
               trigger: 'blur'
             },
-            selectOptions: [{
-                label: "是",
-                value: 1
-              },
-              {
-                label: "否",
-                value: 0
-              }
+            selectOptions: [
+                {label: "是",value: 1},{label: "否",value: 0}
             ]
           }, {
             name: '外跳链接',
@@ -235,11 +219,9 @@ export default {
             name: "修改",
             icon: "fa-pencil",
             event(row) {
-              console.log('编辑');
               console.log(row);
               self.dialogVisible = true;
               self.dialogForm.options.submitUrl = self.updateRowUrl;
-              self.msg = "修改固收加息活动成功";
               if (row.isAppOpen) {
                 row.isAppOpen = 1;
               } else {
@@ -255,9 +237,9 @@ export default {
               self.$axios.post("/interface/banner/remove_banner", {
                 autoId: row.autoId
               }).then((res) => {
-                if (res.data.flag == true) {
+                if (res.data.status == true) {
                   self.$message.success('删除成功');
-                  this.getTableData();
+                  self.getTableData();
                 }
               }).catch(function(error) {
                 self.$message.error('错误');
@@ -270,9 +252,9 @@ export default {
               self.$axios.post("/interface/banner/use_banner", {
                 autoId: row.autoId
               }).then((res) => {
-                if (res.data.flag == true) {
+                if (res.data.status == true) {
                   self.$message.success('启用成功');
-                  this.getTableData();
+                  self.getTableData();
                 }
               }).catch(function(error) {
                 self.$message.error('错误');
@@ -285,9 +267,9 @@ export default {
               self.$axios.post("/interface/banner/unuse_banner", {
                 autoId: row.autoId
               }).then((res) => {
-                if (res.data.flag == true) {
+                if (res.data.status == true) {
                   self.$message.success('禁用成功');
-                  this.getTableData();
+                  self.getTableData();
                 }
               }).catch(function(error) {
                 self.$message.error('错误');
@@ -301,9 +283,7 @@ export default {
       topBtnsConfig: [{
         name: "新建",
         event() {
-          console.log('新建');
           self.dialogForm.options.submitUrl = self.newRowUrl;
-          self.msg = "新增固收加息活动成功";
           self.dialogFormData = {};
           self.dialogVisible = true;
         }
@@ -318,7 +298,6 @@ export default {
       searchFormData: {},
       selectedTableRows: [], //选中的table 行
       tableData: [], //让搜索框的数据赋值到表格
-      msg: '',
       tablePage: 1,
       tableRows: 50,
       dialogVisible: false
@@ -396,7 +375,6 @@ export default {
       const self = this;
       self.dialogVisible = false;
       self.$axios.post(self.dialogForm.options.submitUrl, self.dialogFormData).then((res) => {
-        self.$message.success(self.msg);
         this.getTableData();
       }).catch(function(error) {
         self.$message.error('失败');

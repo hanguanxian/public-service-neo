@@ -6,7 +6,7 @@ let config = {
     return QS.stringify(params);
   },
   validateStatus: function (status) {
-    return status < 500; // 默认的
+    return status < 500;
   }
 }
 
@@ -15,7 +15,7 @@ axios.defaults.validateStatus = config.validateStatus;
 
 axios.interceptors.response.use(function (response) {
   if(response.status == 403) {
-    window.location.href = location.origin + '#login';
+    window.location.href = window.location.origin + '#login';
     return;
   }
   return response;

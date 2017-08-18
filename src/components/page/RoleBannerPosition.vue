@@ -6,7 +6,6 @@
         :child-table-options="tableConfig.tableOptions"
         :child-table-actions="tableConfig.tableActions"
         :child-table-data="tableData"
-        @cellClick="cellClickd"
         @pageChange="pageChanged">
         <!-- 顶部工具栏 -->
         <div slot="topBtns">
@@ -36,16 +35,8 @@ export default {
     return {
       //弹出框配置
       dialogForm: {
-        items: [{name: '所属项目',placeholder: '所属项目', key: 'projectName',type: 'select',
-        selectOptions:[
-            {label: "请选择",value: "-1"},
-            {label: "源码国际IOS",value: "yuanma_international_ios"},
-            {label: "源码私行IOS",value: "yuanma_domestic_ios"},
-            {label: "源码理财师IOS",value: "yuanma_planner_ios"},
-            {label: "源码国际Android",value: "yuanma_international_android"},
-            {label: "源码私行Android",value: "yuanma_domestic_android"},
-            {label: "源码理财师Android",value: "yuanma_planner_android"}
-        ]}, {
+        items: [{name: '所属项目',placeholder: '所属项目', key: 'projectId',type: 'select',
+        selectOptions:[]}, {
           name: 'banner图位置标识',
           key: 'positionCode'
         }, {
@@ -61,7 +52,7 @@ export default {
             trigger: 'blur'
           }, //表单默认校验规则
           //inline: true, //输入框是否在一行内
-          labelWidth: "130px",
+          labelWidth: "150px",
           submitName: '确定' //提交按钮文字
         }
       },
@@ -86,7 +77,7 @@ export default {
         tableActions: {
           name: '操作',
           key: 'actions',
-          width: "300",
+          width: "90",
           fixed: "right",
           buttons: [{
             name: "修改",
@@ -94,7 +85,6 @@ export default {
             event(row) {
               self.dialogVisible = true;
               self.dialogForm.options.submitUrl = self.updateRowUrl;
-              self.msg = "修改固收加息活动成功";
               let copyRow = JSON.stringify(row);
               self.dialogFormData = JSON.parse(copyRow);
             }
@@ -106,20 +96,15 @@ export default {
       topBtnsConfig: [{
           name: "新建",
           event() {
-            console.log('新建');
             self.dialogForm.options.submitUrl = self.newRowUrl;
-            self.msg = "新增固收加息活动成功";
             self.dialogFormData = {};
             self.dialogVisible = true;
           }
       }],
-      dataListUrl: '../../../static/position_list.json',
-      newRowUrl: '/interface/act/add_act_vip_append.do', //表格全部数据请求地址
-      updateRowUrl: "/interface/act/modify_act_vip_append.do", //更新列表的行链接
-      onsaleUrl: "/interface/act/modify_act_vip_append_onsale.do",
-      deleteRowUrl: "/interface/act/modify_act_vip_append_onsale.do", //更新列表的行链接
+      dataListUrl: '/interface/banner/position_list',
+      newRowUrl: '/interface/banner/position_new', //表格全部数据请求地址
+      updateRowUrl: "/interface/banner/position_edit", //更新列表的行链接
       dialogFormData: {},//弹出框formData
-      searchFormData: {},
       selectedTableRows:[],//选中的table 行
       tableData: [],//让搜索框的数据赋值到表格
       msg: '',
@@ -134,54 +119,39 @@ export default {
     BaseTable //富文本组件
   },
   created() {
-      this.getTableData();
+      const self = this;
+      self.$axios.post('/interface/banner/project_list').then((res) => {
+        var selectOptions = res.data.data;
+        var tempArry = [];
+        for (var i = 0; i < selectOptions.length; i++) {
+          var select = {};
+          select.label = selectOptions[i].projectName;
+          select.value = selectOptions[i].projectId;
+          tempArry.push(select);
+        }
+        self.dialogForm.items[0].selectOptions = tempArry;
+      })
+      self.getTableData();
   },
   methods: {
-    searchCallBack(formData) {//搜索事件
-      const self = this;
-      console.log(formData);
-    //   let data = {
-    //     "actAutoId":"",
-    //     "isOnsale": formData.isOnsale || -1,
-    //     "startCreateTime": formData.beginDate || "",
-    //     "endCreateTime": formData.endDate || "",
-    //     page: self.tablePage,
-    //     rows: self.tableRows
-    //   }
-    //   self.$axios.post(self.searchForm.options.submitUrl, data).then((res) => {
-    //       console.log(res);
-    //       self.getTableData();
-    //   }).catch(function (error) {
-    //       self.$message.error('搜索失败');
-    //   });
-    },
     pageChanged(value) {//翻页的事件
         this.tablePage = value;
         this.getTableData();
     },
     getTableData() {//初始化表格数据
       const self = this;
-      self.$axios.get(self.dataListUrl, {
+      self.$axios.post(self.dataListUrl, {
         page: self.tablePage,
         rows: self.tableRows,
       }).then((res) => {
-          console.log(res);
-        this.tableData = res.data.rows;
+            this.tableData = res.data.data;
       })
-    },
-    cellClickd(value) {//选中单格的事件
-        console.log(value);
-        if(value) {
-            this.$message(value + '');
-        }
     },
     dialogCallBack(value) {//弹出框的提交事件
       console.log('dialogCallBack');
       const self = this;
-
       self.dialogVisible = false;
-      self.$axios.post(self.dialogForm.options.submitUrl, self.$qs.stringify(value)).then((res) => {
-          self.$message.success(self.msg);
+      self.$axios.post(self.dialogForm.options.submitUrl, self.dialogFormData).then((res) => {
           this.getTableData();
       }).catch(function (error) {
           self.$message.error('失败');

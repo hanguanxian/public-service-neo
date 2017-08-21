@@ -142,14 +142,14 @@ export default {
           key: 'appClientStr'
         }, {
           name: '版本数值',
-          type: 'number',
-          rules: {type: 'number',required: true,message: '必填',trigger: 'blur'},
           key: 'appVersionInt'
         }, {
           name: '版本编码',
           key: 'appVersionStr'
         }, {
           name: '是否强制更新',
+          type: 'boolean',
+          boolName: ['是','否'],
           key: 'isMust'
         }, {
           name: '图片地址',
@@ -214,7 +214,7 @@ export default {
                   appVersionId: row.appVersionId,
                   enumAppVersionState: row.enumAppVersionState
                 }).then((res) => {
-                  if (res.data.status == true) {
+                  if (res.data.success == true) {
                     self.$message.success('审核成功');
                     self.getTableData();
                   }
@@ -263,7 +263,6 @@ export default {
     searchCallBack(formData) {//搜索事件
       const self = this;
       console.log(formData);
-
       formData.page = 1;
       formData.rows = self.tableRows;
       self.$axios.post(self.searchForm.options.submitUrl, formData).then((res) => {

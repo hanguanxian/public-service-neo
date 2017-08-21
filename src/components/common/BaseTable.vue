@@ -27,6 +27,9 @@
                   <template v-else-if="column.type == 'datetime' && scope.row[column.key]">
                       {{ new Date(scope.row[column.key]).Format("yyyy-MM-dd hh:mm:ss") }}
                   </template>
+                  <template v-else-if="column.type == 'boolean'">
+                      {{ scope.row[column.key] == true ? column.boolName[0] : column.boolName[1]}}
+                  </template>
                   <template v-else-if="column.type == 'richText' && scope.row[column.key]">
                       <el-popover trigger="hover" placement="top">
                           <div>{{ column.name }}:</div>

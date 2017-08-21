@@ -30,14 +30,6 @@ export default {
   data() {
     const self = this;
     return {
-      // tableConfig 页面展示字段配置
-      //   name 页面字段显示的label文字
-      //   key  取值的key
-      //   insearch 是否在搜索框出现
-      //   type 字段输入时的类型 默认inpute  目前有 date select editor inpute
-      //   selectOptions 当type 为select的时候 option的枚举值
-      //   tableActions 表格里面的操作按钮以及事件
-      //   useType 能被2整除 显示在表格 能被3整除显示在表格新建编辑列表页面 能被5整除显示在查询框
       //查询框配置
       searchForm: {
         items: [{name: 'APP类型',placeholder: 'APP类型', key: 'appClient',type: 'select',
@@ -52,22 +44,15 @@ export default {
                 ]},
                 {name: '版本数值',placeholder: '版本数值',key: 'appVersionInt'},
                 {name: '版本编码',placeholder: '版本编码', key: 'appVersionStr'},
-                {name: '版本状态',placeholder: '请选择',key: 'appVersionState',type: 'select',
+                {name: '是否强制更新',placeholder: '是否强制更新',key: 'isMust',type: 'select',
                 selectOptions: [
                     {label: "请选择",value: "-1"},
-                    {label: "编辑中",value: "0"},
-                    {label: "审核中",value: "100"},
-                    {label: "正式",value: "200"}
-                ]},
-                {name: '是否强制更新',placeholder: '是否强制更新',key: 'strIsMust',type: 'select',
-                selectOptions: [
-                    {label: "请选择",value: "-1"},
-                    {label: "是",value: "0"},
-                    {label: "否",value: "0"}
+                    {label: "是",value: 1},
+                    {label: "否",value: 0}
                 ]},
             ],
         options: {
-          submitUrl: "/interface/act/act_vip_append_list.do", //新建的链接
+          submitUrl: "/interface/sys-app-version/examine_sys_app_version_list", //新建的链接
           submitIcon: "search",//搜索按钮
           formClass: 'query-form', //向表单添加样式
           showLabel: false, //是否显示label标签
@@ -88,15 +73,15 @@ export default {
           key: 'appClientStr'
         }, {
           name: '版本数值',
-          type: 'number',
-          rules: {type: 'number',required: true,message: '必填',trigger: 'blur'},
           key: 'appVersionInt'
         }, {
           name: '版本编码',
           key: 'appVersionStr'
         }, {
           name: '是否强制更新',
-          key: 'strIsMust'
+          type: 'boolean',
+          boolName: ['是','否'],
+          key: 'isMust'
         }, {
           name: '图片地址',
           type: 'href',
@@ -126,24 +111,43 @@ export default {
             icon: "fa-hand-peace-o",
             event(row) {
               console.log('同意');
-              self.$message.success('同意');
+              self.$message.success(row);
+              self.$axios.post(self.examineUrl, {
+                appVersionId: row.appVersionId,
+                enumAppVersionState: 200
+              }).then((res) => {
+                if (res.data.success == true) {
+                  self.$message.success('同意');
+                  self.getTableData();
+                }
+              }).catch(function(error) {
+                self.$message.error('系统错误');
+              });
             }
           },{
             name: "拒绝",
             icon: "fa-hand-paper-o",
             event(row) {
-              console.log('上架');
-              self.$message.success('拒绝');
+              console.log('拒绝');
+              self.$message.success(row);
+              self.$axios.post(self.examineUrl, {
+                appVersionId: row.appVersionId,
+                enumAppVersionState: 0
+              }).then((res) => {
+                if (res.data.success == true) {
+                  self.$message.success('拒绝');
+                  self.getTableData();
+                }
+              }).catch(function(error) {
+                self.$message.error('系统错误');
+              });
             }
           }]
         },
         tableOptions: {}
       },
-      dataListUrl: '../../../static/examine_sys_app_version_list.json',
-      newRowUrl: '/interface/act/add_act_vip_append.do', //表格全部数据请求地址
-      updateRowUrl: "/interface/act/modify_act_vip_append.do", //更新列表的行链接
-      onsaleUrl: "/interface/act/modify_act_vip_append_onsale.do",
-      deleteRowUrl: "/interface/act/modify_act_vip_append_onsale.do", //更新列表的行链接
+      dataListUrl: '/interface/sys-app-version/examine_sys_app_version_list',
+      examineUrl: '/interface/sys-app-version/examine_sys_app_version.do', //表格全部数据请求地址
       searchFormData: {},
       selectedTableRows:[],//选中的table 行
       tableData: [],//让搜索框的数据赋值到表格
@@ -164,20 +168,13 @@ export default {
     searchCallBack(formData) {//搜索事件
       const self = this;
       console.log(formData);
-    //   let data = {
-    //     "actAutoId":"",
-    //     "isOnsale": formData.isOnsale || -1,
-    //     "startCreateTime": formData.beginDate || "",
-    //     "endCreateTime": formData.endDate || "",
-    //     page: self.tablePage,
-    //     rows: self.tableRows
-    //   }
-    //   self.$axios.post(self.searchForm.options.submitUrl, data).then((res) => {
-    //       console.log(res);
-    //       self.getTableData();
-    //   }).catch(function (error) {
-    //       self.$message.error('搜索失败');
-    //   });
+      formData.page = 1;
+      formData.rows = self.tableRows;
+      self.$axios.post(self.searchForm.options.submitUrl, formData).then((res) => {
+          self.tableData = res.data.data.rows;
+      }).catch(function (error) {
+          self.$message.error('搜索失败');
+      });
     },
     pageChanged(value) {//翻页的事件
         this.tablePage = value;
@@ -185,12 +182,11 @@ export default {
     },
     getTableData() {//初始化表格数据
       const self = this;
-      self.$axios.get(self.dataListUrl, {
+      self.$axios.post(self.dataListUrl, {
         page: self.tablePage,
         rows: self.tableRows,
       }).then((res) => {
-          console.log(res);
-        this.tableData = res.data.rows;
+        this.tableData = res.data.data.rows;
       })
     },
     cellClickd(value) {//选中单格的事件

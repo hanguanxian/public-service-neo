@@ -45,7 +45,6 @@ export default {
       searchForm: {
         items: [{name: 'APP类型',placeholder: 'APP类型', key: 'appClient',type: 'select',
                 selectOptions:[
-                    {label: "请选择",value: "-1"},
                     {label: "源码国际IOS",value: "yuanma_international_ios"},
                     {label: "源码私行IOS",value: "yuanma_domestic_ios"},
                     {label: "源码理财师IOS",value: "yuanma_planner_ios"},
@@ -80,7 +79,6 @@ export default {
       dialogForm: {
         items: [{name: 'APP类型',placeholder: 'APP类型', key: 'appClient',type: 'select',
         selectOptions:[
-            {label: "请选择",value: "-1"},
             {label: "源码国际IOS",value: "yuanma_international_ios"},
             {label: "源码私行IOS",value: "yuanma_domestic_ios"},
             {label: "源码理财师IOS",value: "yuanma_planner_ios"},
@@ -116,7 +114,7 @@ export default {
           key: 'remark'
         }],
         options: {
-          submitUrl: "/interface/sys-app-version/add_act_vip_append.do", //新建的链接
+          submitUrl: "/interface/sys-app-version/add_act_vip_append", //新建的链接
           submitRow: true,//提交按钮是否单独占一行
           cancelBtnShow: true,
           defaultRules: {
@@ -194,9 +192,7 @@ export default {
             name: "删除",
             icon: "fa-trash-o",
             event(row) {
-                self.$axios.post(self.deleteRowUrl, {
-                  appVersionId: row.appVersionId
-                }).then((res) => {
+                self.$axios.post(self.deleteRowUrl, {appVersionId: row.appVersionId}).then((res) => {
                   if (res.data.success == true) {
                     self.$message.success('删除成功');
                     self.getTableData();
@@ -288,8 +284,8 @@ export default {
     dialogCallBack(value) {//弹出框的提交事件
       const self = this;
       self.dialogVisible = false;
-      self.$axios.post(self.dialogForm.options.submitUrl, self.dialogFormData).then((res) => {
-          this.getTableData();
+      self.$axios.post(self.dialogForm.options.submitUrl, self.dialogFormData).then(function(res){
+          self.getTableData();
       }).catch(function (error) {
           self.$message.error('失败');
       });

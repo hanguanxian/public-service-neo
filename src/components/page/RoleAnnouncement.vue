@@ -13,7 +13,6 @@
         :child-table-options="tableConfig.tableOptions"
         :child-table-actions="tableConfig.tableActions"
         :child-table-data="tableData"
-        @cellClick="cellClickd"
         @pageChange="pageChanged">
         <!-- 顶部工具栏 -->
         <div slot="topBtns">
@@ -41,21 +40,11 @@ export default {
   data() {
     const self = this;
     return {
-      // tableConfig 页面展示字段配置
-      //   name 页面字段显示的label文字
-      //   key  取值的key
-      //   insearch 是否在搜索框出现
-      //   inDialog 是否在弹出页面显示
-      //   type 字段输入时的类型 默认inpute  目前有 date select editor inpute
-      //   selectOptions 当type 为select的时候 option的枚举值
-      //   tableActions 表格里面的操作按钮以及事件
-      //   dialogActions 弹出框里面的操作按钮以及事件
-      //   useType 能被2整除 显示在表格 能被3整除显示在表格新建编辑列表页面 能被5整除显示在查询框
       //查询框配置
       searchForm: {
           items: [
                   {name: '公告ID',placeholder: '公告ID',key: 'announcementId'},
-                  {name: '所属项目',placeholder: '所属项目', key: 'projectName',type: 'select',
+                  {name: '所属项目',placeholder: '所属项目', key: 'projectId',type: 'select',
                   selectOptions:[
                       {label: "请选择",value: "-1"},
                       {label: "源码国际IOS",value: "yuanma_international_ios"},
@@ -65,7 +54,7 @@ export default {
                       {label: "源码私行Android",value: "yuanma_domestic_android"},
                       {label: "源码理财师Android",value: "yuanma_planner_android"}
                   ]},
-                  {name: '推送位置',placeholder: '推送位置',key: 'positionNames',type: 'select',
+                  {name: '推送位置',placeholder: '推送位置',key: 'positionCodes',type: 'select',
                   selectOptions: [
                       {label: "请选择",value: "-1"},
                       {label: "编辑中",value: "0"},
@@ -75,7 +64,7 @@ export default {
                   {name: '公告标题',placeholder: '公告标题', key: 'announcementName'}
               ],
         options: {
-          submitUrl: "/interface/act/act_vip_append_list.do", //新建的链接
+          submitUrl: "/interface/announcement/announcement-list", //新建的链接
           submitIcon: "search",//搜索按钮
           formClass: 'query-form', //向表单添加样式
           showLabel: false, //是否显示label标签
@@ -120,7 +109,7 @@ export default {
           key: 'remark'
         }],
         options: {
-          submitUrl: "/interface/act/add_act_vip_append.do", //新建的链接
+          submitUrl: "/interface/announcement/announcement-add", //新建的链接
           submitRow: true,//提交按钮是否单独占一行
           defaultRules: {
             required: true,
@@ -148,50 +137,62 @@ export default {
           key: 'announcementName'
         }, {
           name: '公告内容',
-          key: 'contentShort'
+          width: '200px',
+          type: 'richText',
+          key: 'announcementContent'
         }, {
           name: '公告日期',
           type: 'date',
           key: 'announcementDate'
         }, {
           name: '是否启用',
+          type: 'boolean',
+          boolName: ['是','否'],
           key: 'isEnable'
         }, {
           name: '备注',
+          type: 'richText',
           key: 'remark'
         }],
         tableActions: {
           name: '操作',
           key: 'actions',
-          width: "300",
+          width: "230",
           fixed: "right",
           buttons: [{
             name: "修改",
             icon: "fa-pencil",
             event(row) {
-              console.log('编辑');
               console.log(row);
-              if(row.isOnsale!='否'){
- 			      self.$message.error('已上架活动不可以修改');
-         	  } else {
-                  self.dialogVisible = true;
-                  self.dialogForm.options.submitUrl = self.updateRowUrl;
-                  self.msg = "修改固收加息活动成功";
-                  let copyRow = JSON.stringify(row);
-                  self.dialogFormData = JSON.parse(copyRow);
-              }
+              self.dialogVisible = true;
+              self.dialogForm.options.submitUrl = self.updateRowUrl;
+              self.dialogFormData = JSON.parse(JSON.stringify(row));
             }
           },{
             name: "启用",
             icon: "fa-check",
             event(row) {
-
+              self.$axios.post('/interface/announcement/be-enabled', {announcementId: row.announcementId}).then((res) => {
+                if (res.data.success == true) {
+                  self.$message.success('启用成功');
+                  self.getTableData();
+                }
+              }).catch(function(error) {
+                self.$message.error('系统错误');
+              });
             }
           }, {
             name: "禁用",
             icon: "fa-close",
             event(row) {
-
+              self.$axios.post('/interface/announcement/be-disabled', {announcementId: row.announcementId}).then((res) => {
+                if (res.data.success == true) {
+                  self.$message.success('禁用成功');
+                  self.getTableData();
+                }
+              }).catch(function(error) {
+                self.$message.error('系统错误');
+              });
             }
           }]
         },
@@ -201,18 +202,15 @@ export default {
       topBtnsConfig: [{
           name: "新建",
           event() {
-            console.log('新建');
             self.dialogForm.options.submitUrl = self.newRowUrl;
-            self.msg = "新增固收加息活动成功";
             self.dialogFormData = {};
             self.dialogVisible = true;
           }
       }],
-      dataListUrl: '../../../static/announcement-list.json',
-      newRowUrl: '/interface/act/add_act_vip_append.do', //表格全部数据请求地址
-      updateRowUrl: "/interface/act/modify_act_vip_append.do", //更新列表的行链接
-      onsaleUrl: "/interface/act/modify_act_vip_append_onsale.do",
-      deleteRowUrl: "/interface/act/modify_act_vip_append_onsale.do", //更新列表的行链接
+      dataListUrl: '/interface/announcement/announcement-list',
+      newRowUrl: '/interface/announcement/announcement-add', //表格全部数据请求地址
+      updateRowUrl: "/interface/announcement/announcement-edit", //更新列表的行链接
+      deleteRowUrl: "/interface/announcement/announcement-remove", //更新列表的行链接
       dialogFormData: {},//弹出框formData
       searchFormData: {},
       selectedTableRows:[],//选中的table 行
@@ -230,8 +228,8 @@ export default {
   },
   created() {
       const self = this;
-      self.$axios.get('../../../static/project_list.json').then((res) => {
-          var selectOptions = res.data;
+      self.$axios.post('/interface/banner/project_list').then((res) => {
+          var selectOptions = res.data.data;
           var tempArry = [];
           for (var i = 0; i < selectOptions.length; i++) {
               var select = {};
@@ -241,26 +239,32 @@ export default {
           }
           self.searchForm.items[1].selectOptions = tempArry;
       })
+      self.$axios.post('/interface/announcement/position_select_list').then((res) => {
+          var selectOptions = res.data.data;
+          var tempArry = [];
+          for (var i = 0; i < selectOptions.length; i++) {
+              var select = {};
+              select.label = selectOptions[i].positionName;
+              select.value = selectOptions[i].positionCode;
+              tempArry.push(select);
+          }
+          self.searchForm.items[2].selectOptions = tempArry;
+          self.dialogForm.items[1].selectOptions = tempArry;
+      })
       this.getTableData();
   },
   methods: {
     searchCallBack(formData) {//搜索事件
       const self = this;
       console.log(formData);
-    //   let data = {
-    //     "actAutoId":"",
-    //     "isOnsale": formData.isOnsale || -1,
-    //     "startCreateTime": formData.beginDate || "",
-    //     "endCreateTime": formData.endDate || "",
-    //     page: self.tablePage,
-    //     rows: self.tableRows
-    //   }
-    //   self.$axios.post(self.searchForm.options.submitUrl, data).then((res) => {
-    //       console.log(res);
-    //       self.getTableData();
-    //   }).catch(function (error) {
-    //       self.$message.error('搜索失败');
-    //   });
+      formData.page = 1;
+      formData.rows = self.tableRows;
+      self.$axios.post(self.searchForm.options.submitUrl, formData).then((res) => {
+          self.tableData = res.data.data.rows;
+          self.$message.success('搜索完成');
+      }).catch(function (error) {
+          self.$message.error('搜索失败');
+      });
     },
     pageChanged(value) {//翻页的事件
         this.tablePage = value;
@@ -268,26 +272,19 @@ export default {
     },
     getTableData() {//初始化表格数据
       const self = this;
-      self.$axios.get(self.dataListUrl, {
+      self.$axios.post(self.dataListUrl, {
         page: self.tablePage,
         rows: self.tableRows,
       }).then((res) => {
-          console.log(res);
-        this.tableData = res.data;
+        this.tableData = res.data.data.rows;
       })
-    },
-    cellClickd(value) {//选中单格的事件
-        console.log(value);
-        if(value) {
-            this.$message(value + '');
-        }
     },
     dialogCallBack(value) {//弹出框的提交事件
       console.log('dialogCallBack');
       const self = this;
 
       self.dialogVisible = false;
-      self.$axios.post(self.dialogForm.options.submitUrl, self.$qs.stringify(value)).then((res) => {
+      self.$axios.post(self.dialogForm.options.submitUrl, value).then((res) => {
           self.$message.success(self.msg);
           this.getTableData();
       }).catch(function (error) {

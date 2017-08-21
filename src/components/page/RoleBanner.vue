@@ -37,16 +37,11 @@ export default {
             placeholder: '所属项目',
             key: 'projectName',
             type: 'select',
-            selectOptions: [{
-              "label": "源码私行",
-              "value": "yuanma_bank"
-            }, {
-              "label": "多肉理财",
-              "value": "doro"
-            }, {
-              "label": "源码理财师",
-              "value": "yuanma_planner"
-            }]
+            relative: 'positionNames',
+            event(value) {
+              self.positionSelectList(value,self.searchForm.items[1]);
+            },
+            selectOptions: []
           },
           {
             name: '推送位置',
@@ -90,16 +85,11 @@ export default {
             placeholder: '所属项目',
             key: 'projectId',
             type: 'select',
-            selectOptions: [{
-              "label": "源码私行",
-              "value": "yuanma_bank"
-            }, {
-              "label": "多肉理财",
-              "value": "doro"
-            }, {
-              "label": "源码理财师",
-              "value": "yuanma_planner"
-            }]
+            selectOptions: [],
+            relative: 'positionCodes',
+            event(value) {
+              self.positionSelectList(value,self.dialogForm.items[2]);
+            },
           }, {
             name: '上传图片',
             formNmae: 'imgUploader',
@@ -179,7 +169,7 @@ export default {
           key: 'projectName'
         }, {
           name: 'banner图位置标识',
-          key: 'positionNames'
+          key: 'positionCodes'
         }, {
           name: '图片',
           type: 'image',
@@ -322,22 +312,12 @@ export default {
       //console.log(JSON.stringify(tempArry));
       self.searchForm.items[0].selectOptions = tempArry;
       self.dialogForm.items[0].selectOptions = tempArry;
-    })
-    self.$axios.post('/interface/banner/position_select_list', {
-      projectId: 'yuanma_bank'
-    }).then((res) => {
-      var selectOptions = res.data.data;
-      var tempArry = [];
-      for (var i = 0; i < selectOptions.length; i++) {
-        var select = {};
-        select.label = selectOptions[i].positionName;
-        select.value = selectOptions[i].positionCode;
-        tempArry.push(select);
+      if(tempArry.length > 0) {
+          self.positionSelectList(tempArry[0].value,self.searchForm.items[1]);
+          self.positionSelectList(tempArry[0].value,self.dialogForm.items[2]);
       }
-      //console.log(JSON.stringify(tempArry));
-      self.searchForm.items[1].selectOptions = tempArry;
-      self.dialogForm.items[2].selectOptions = tempArry;
     })
+
     this.getTableData();
   },
   methods: {
@@ -357,6 +337,22 @@ export default {
       }).catch(function(error) {
         self.$message.error('搜索错误');
       });
+    },
+    positionSelectList(projectId,items){
+      const self = this;
+      self.$axios.post('/interface/banner/position_select_list', {
+        projectId: projectId
+      }).then((res) => {
+        var selectOptions = res.data.data;
+        var tempArry = [];
+        for (var i = 0; i < selectOptions.length; i++) {
+          var select = {};
+          select.label = selectOptions[i].positionName;
+          select.value = selectOptions[i].positionCode;
+          tempArry.push(select);
+        }
+        items.selectOptions = tempArry;
+      })
     },
     pageChanged(value) { //翻页的事件
       this.tablePage = value;

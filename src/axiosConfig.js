@@ -6,12 +6,12 @@ let config = {
     return QS.stringify(params);
   },
   validateStatus: function (status) {
-    return status < 500;
+    return status < 500 && status >= 200;
   }
 }
 
 axios.defaults.paramsSerializer = config.paramsSerializer;
-axios.defaults.validateStatus = config.validateStatus;
+//axios.defaults.validateStatus = config.validateStatus;
 
 axios.interceptors.response.use(function (response) {
   if(response.status == 403) {

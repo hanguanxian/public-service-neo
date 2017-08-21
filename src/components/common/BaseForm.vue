@@ -27,7 +27,7 @@
                   </el-radio-group>
             </template>
             <template v-else-if="item.type == 'select'">
-                  <el-select v-model="baseForm[item.key]" clearable :placeholder="options.showPlaceholder == false ? '' : item.placeholder">
+                  <el-select v-model="baseForm[item.key]" @change="selectedChange(item)" clearable :placeholder="options.showPlaceholder == false ? '' : item.placeholder">
                       <el-option v-for="option in item.selectOptions"
                           :key="option.value"
                           :label="option.label"
@@ -114,12 +114,17 @@ import { quillEditor } from 'vue-quill-editor';//富文本编辑器
             }
         },
         methods: {
-            submitUpload() {
-                this.$refs.upload.submit();
-            },
             daterangeChange(item){
                 this.baseForm[item.beginkey] = item.daterange[0];
                 this.baseForm[item.endkey] = item.daterange[1];
+            },
+            selectedChange(item){
+              if(typeof item.event == "function") {
+                  if(item.relative) {
+                    delete this.baseForm[item.relative] 
+                  }
+                  item.event(this.baseForm[item.key]);
+              }
             },
             fileChange(index){
                 this.items[index].active = true;

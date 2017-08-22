@@ -17,7 +17,6 @@
         <!-- 顶部工具栏 -->
   </base-table>
   <!-- 页面table结束 -->
-
 </div>
 </template>
 

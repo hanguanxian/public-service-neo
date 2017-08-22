@@ -26,7 +26,7 @@
     export default {
         data() {
             return {
-                userMenuUrl: '../../../static/userMenu.json',//列表页面
+                userMenuUrl: '/interface/user_menu',//列表页面
                 userMenu: []
             }
         },
@@ -49,11 +49,9 @@
         },
         methods: {
             getData() {
-                let data = {"userMenu":[{"menu":{"autoId":13,"projectId":"5","menuCode":"sys-app-version","menuName":"版本管理","sort":0},"roles":[{"autoId":21,"projectId":"5","roleCode":"ROLE_APP_VERSION","roleName":"版本控制列表","roleAlias":"版本控制列表","roleUrl":"/sys-app-version/sys_app_version_list_page.do","roleClass":"com.jingyuanfinance.web.controller.SysAppVersionController.sysAppVersionListPage","projectName":null,"sort":null},{"autoId":23,"projectId":"5","roleCode":"ROLE_EXAMINE_APP_VERSION","roleName":"版本控制审核列表","roleAlias":"版本控制审核列表","roleUrl":"/sys-app-version/examine_sys_app_version_list_page.do","roleClass":"com.jingyuanfinance.web.controller.SysAppVersionController.examineSysAppVersionListPage","projectName":null,"sort":null}]},{"menu":{"autoId":14,"projectId":"5","menuCode":"announcement","menuName":"公告管理","sort":4},"roles":[{"autoId":20,"projectId":"5","roleCode":"ROLE_ANNOUNCEMENT","roleName":"公告列表","roleAlias":"公告列表","roleUrl":"/announcement/announcement-list-page.do","roleClass":"com.jingyuanfinance.web.controller.AnnouncementMainController.getAnnouncementPage","projectName":null,"sort":null},{"autoId":22,"projectId":"5","roleCode":"ROLE_ANNOUNCEMENT_POSITION","roleName":"公告位配置","roleAlias":"公告位配置","roleUrl":"/announcement/position_list_page.do","roleClass":"com.jingyuanfinance.web.controller.AnnouncementMainController.getAnnouncementPositionPage","projectName":null,"sort":null}]},{"menu":{"autoId":15,"projectId":"5","menuCode":"banner","menuName":"banner图管理","sort":5},"roles":[{"autoId":24,"projectId":"5","roleCode":"ROLE_BANNER","roleName":"banner图列表","roleAlias":"banner图列表","roleUrl":"/banner/banner_list_page.do","roleClass":"com.jingyuanfinance.web.controller.BannerController.getBannerPage","projectName":null,"sort":null},{"autoId":25,"projectId":"5","roleCode":"ROLE_BANNER_POSITION","roleName":"banner图位配置","roleAlias":"banner图位配置","roleUrl":"/banner/position_list_page.do","roleClass":"com.jingyuanfinance.web.controller.BannerController.getBannerPositionPage","projectName":null,"sort":null}]}]};
-              this.userMenu = data.userMenu;
-            //   this.$axios.get(this.userMenuUrl).then((res) => {
-            //     this.userMenu = res.data.userMenu;
-            //   })
+              this.$axios.post(this.userMenuUrl).then((res) => {
+                this.userMenu = res.data.data.userMenu;
+              })
             },
         	handleSelect(key, keyPath,selectComponent) {
         		var vm = this;

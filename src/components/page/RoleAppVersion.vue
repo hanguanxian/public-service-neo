@@ -208,7 +208,7 @@ export default {
               console.log(row);
                 self.$axios.post(self.examineUrl, {
                   appVersionId: row.appVersionId,
-                  enumAppVersionState: row.enumAppVersionState
+                  enumAppVersionState: 100
                 }).then((res) => {
                   if (res.data.success == true) {
                     self.$message.success('审核成功');

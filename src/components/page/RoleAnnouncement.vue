@@ -161,7 +161,7 @@ export default {
             name: "启用",
             icon: "fa-check",
             event(row) {
-              self.$axios.post('/interface/announcement/be-enabled', {announcementId: row.announcementId}).then((res) => {
+              self.$axios.post('/interface/announcement/be-enabled', {announcementId: row.autoId}).then((res) => {
                 if (res.data.success == true) {
                   self.$message.success('启用成功');
                   self.getTableData();
@@ -174,7 +174,7 @@ export default {
             name: "禁用",
             icon: "fa-close",
             event(row) {
-              self.$axios.post('/interface/announcement/be-disabled', {announcementId: row.announcementId}).then((res) => {
+              self.$axios.post('/interface/announcement/be-disabled', {announcementId: row.autoId}).then((res) => {
                 if (res.data.success == true) {
                   self.$message.success('禁用成功');
                   self.getTableData();

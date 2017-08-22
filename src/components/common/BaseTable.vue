@@ -58,7 +58,7 @@
             <slot name="bottomBtns"></slot>
         </div>
         <div class="pagination">
-          <el-pagination @current-change="pageChange" layout="prev, pager, next" :total="1000">
+          <el-pagination @current-change="pageChange" layout="prev, pager, next" :total="options.total">
           </el-pagination>
         </div>
     </div>

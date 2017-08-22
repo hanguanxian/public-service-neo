@@ -151,7 +151,7 @@ export default {
       tableData: [],//让搜索框的数据赋值到表格
       msg: '',
       tablePage: 1,
-      tableRows: 50
+      tableRows: 25
     }
   },
   components: {
@@ -185,6 +185,8 @@ export default {
         rows: self.tableRows,
       }).then((res) => {
         this.tableData = res.data.data.rows;
+        self.tableConfig.tableOptions.total = res.data.data.count;
+        console.log(self.tableConfig.tableOptions.total);
       })
     }
   }

@@ -109,7 +109,7 @@ export default {
       tableData: [],//让搜索框的数据赋值到表格
       msg: '',
       tablePage: 1,
-      tableRows: 50,
+      tableRows: 25,
       dialogVisible: false
     }
   },
@@ -144,7 +144,9 @@ export default {
         page: self.tablePage,
         rows: self.tableRows,
       }).then((res) => {
-            this.tableData = res.data.data;
+            self.tableData = res.data.data;
+            self.tableConfig.tableOptions.total = res.data.count;
+            console.log(self.tableConfig.tableOptions.total);
       })
     },
     dialogCallBack(value) {//弹出框的提交事件

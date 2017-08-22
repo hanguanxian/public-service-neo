@@ -165,6 +165,9 @@ export default {
           name: '所属项目',
           key: 'projectId'
         }, {
+          name: '所属项目',
+          key: 'appClientStr'
+        }, {
           name: 'banner图位置标识',
           key: 'positionCodes'
         }, {
@@ -213,7 +216,7 @@ export default {
               console.log(row);
               self.dialogVisible = true;
               self.dialogForm.options.submitUrl = self.updateRowUrl;
-              row.isAppOpen = row.isAppOpen ? 1 : 0;          
+              row.isAppOpen = row.isAppOpen ? 1 : 0;
               let copyRow = JSON.stringify(row);
               self.dialogFormData = JSON.parse(copyRow);
             }

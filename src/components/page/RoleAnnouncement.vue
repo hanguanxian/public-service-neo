@@ -154,14 +154,14 @@ export default {
               console.log(row);
               self.dialogVisible = true;
               self.dialogForm.options.submitUrl = self.updateRowUrl;
-              row.positionCodes = row.positionCodes.split(',');
+              row.positionCodes = row.positionCodes.split(',') || [];
               self.dialogFormData = JSON.parse(JSON.stringify(row));
             }
           },{
             name: "启用",
             icon: "fa-check",
             event(row) {
-              self.$axios.post('/interface/announcement/be-enabled', {announcementId: row.autoId}).then((res) => {
+              self.$axios.post('/interface/announcement/be-enabled', {autoId: row.autoId}).then((res) => {
                 if (res.data.success == true) {
                   self.$message.success('启用成功');
                   self.getTableData();
@@ -174,7 +174,7 @@ export default {
             name: "禁用",
             icon: "fa-close",
             event(row) {
-              self.$axios.post('/interface/announcement/be-disabled', {announcementId: row.autoId}).then((res) => {
+              self.$axios.post('/interface/announcement/be-disabled', {autoId: row.autoId}).then((res) => {
                 if (res.data.success == true) {
                   self.$message.success('禁用成功');
                   self.getTableData();

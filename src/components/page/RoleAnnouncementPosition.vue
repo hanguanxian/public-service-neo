@@ -44,7 +44,7 @@ export default {
           key: 'positionName'
         }],
         options: {
-          submitUrl: "/interface/act/add_act_vip_append.do", //新建的链接
+          submitUrl: "/interface/announcement/position_list", //新建的链接
           submitRow: true,//提交按钮是否单独占一行
           defaultRules: {
             required: true,
@@ -86,6 +86,8 @@ export default {
               console.log(row);
               self.dialogVisible = true;
               self.dialogForm.options.submitUrl = self.updateRowUrl;
+              self.dialogForm.items[0].disabled = true;
+              self.dialogForm.items[1].disabled = true;
               self.dialogFormData = JSON.parse(JSON.stringify(row));
             }
           }]
@@ -165,7 +167,7 @@ export default {
     dialogCallBack(value) {//弹出框的提交事件
       const self = this;
       self.dialogVisible = false;
-      self.$axios.post(self.dialogForm.options.submitUrl, value).then(function(res){
+      self.$axios.post(self.dialogForm.options.submitUrl, self.dialogFormData).then(function(res){
           self.$message.success(res.data.msg);
           self.getTableData();
       }).catch(function (error) {

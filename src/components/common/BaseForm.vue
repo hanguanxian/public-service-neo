@@ -27,9 +27,9 @@
                   </el-radio-group>
             </template>
             <template v-else-if="item.type == 'select'">
-                  <el-select v-model="baseForm[item.key]" @change="selectedChange(item)" clearable :placeholder="options.showPlaceholder == false ? '' : item.placeholder">
-                      <el-option v-for="option in item.selectOptions"
-                          :key="option.value"
+                  <el-select v-model="baseForm[item.key]" :disabled="item.disabled || false" :multiple="item.multiple || false" @change="selectedChange(item)" clearable :placeholder="options.showPlaceholder == false ? '' : item.placeholder">
+                      <el-option v-for="(option, index) in item.selectOptions"
+                          :key="index"
                           :label="option.label"
                           :value="option.value">
                         </el-option>
@@ -47,7 +47,7 @@
                   <el-input type="textarea" :rows="item.row || 2" v-model="baseForm[item.key]" :placeholder="options.showPlaceholder == false ? '' : item.placeholder"></el-input>
             </template>
             <template v-else>
-                  <el-input v-model="baseForm[item.key]" :placeholder="options.showPlaceholder == false ? '' : item.placeholder"></el-input>
+                  <el-input v-model="baseForm[item.key]" :disabled="item.disabled || false" :placeholder="options.showPlaceholder == false ? '' : item.placeholder"></el-input>
             </template>
           </el-form-item>
           <template v-if="options.submitRow">
@@ -121,7 +121,7 @@ import { quillEditor } from 'vue-quill-editor';//富文本编辑器
             selectedChange(item){
               if(typeof item.event == "function") {
                   if(item.relative) {
-                    delete this.baseForm[item.relative] 
+                    delete this.baseForm[item.relative]
                   }
                   item.event(this.baseForm[item.key]);
               }
@@ -146,6 +146,8 @@ import { quillEditor } from 'vue-quill-editor';//富文本编辑器
                         if(key == item.key || key == item.beginkey || key == item.endkey) {
                             if(item.type && (item.type == "date" || item.type == "daterange")) {
                                  self.baseForm[key] = new Date(self.baseForm[key]);
+                            } else if(item.type == "select" && item.multiple) {
+                                 self.baseForm[key] = self.baseForm[key].join(',');
                             }
                         }
                     }

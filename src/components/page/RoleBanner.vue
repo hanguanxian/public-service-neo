@@ -35,9 +35,9 @@ export default {
         items: [{
             name: '所属项目',
             placeholder: '所属项目',
-            key: 'projectName',
+            key: 'projectId',
             type: 'select',
-            relative: 'positionNames',
+            relative: 'positionCodes',
             event(value) {
               self.positionSelectList(value,self.searchForm.items[1]);
             },
@@ -46,7 +46,7 @@ export default {
           {
             name: '推送位置',
             placeholder: '推送位置',
-            key: 'positionNames',
+            key: 'positionCodes',
             type: 'select',
             selectOptions: []
           },
@@ -62,10 +62,10 @@ export default {
             type: 'select',
             selectOptions: [{
               label: "是",
-              value: "是"
+              value: 1
             }, {
               label: "否",
-              value: "否"
+              value: 0
             }]
           }
         ],
@@ -165,9 +165,6 @@ export default {
           name: '所属项目',
           key: 'projectId'
         }, {
-          name: '项目名称',
-          key: 'projectName'
-        }, {
           name: 'banner图位置标识',
           key: 'positionCodes'
         }, {
@@ -179,6 +176,8 @@ export default {
           key: 'appVersionStr'
         }, {
           name: '是否本地应用打开',
+          type: 'boolean',
+          boolName: ['是','否'],
           key: 'isAppOpen'
         }, {
           name: '外跳链接',
@@ -195,6 +194,8 @@ export default {
           key: 'sort'
         }, {
           name: '是否显示',
+          type: 'boolean',
+          boolName: ['是','否'],
           key: 'isShow'
         }, {
           name: '备注',
@@ -212,11 +213,7 @@ export default {
               console.log(row);
               self.dialogVisible = true;
               self.dialogForm.options.submitUrl = self.updateRowUrl;
-              if (row.isAppOpen) {
-                row.isAppOpen = 1;
-              } else {
-                row.isAppOpen = 0;
-              }
+              row.isAppOpen = row.isAppOpen ? 1 : 0;          
               let copyRow = JSON.stringify(row);
               self.dialogFormData = JSON.parse(copyRow);
             }
@@ -323,19 +320,15 @@ export default {
   methods: {
     searchCallBack(formData) { //搜索事件
       const self = this;
+      formData.isShow = formData.isShow == 1 ? true : false;
       console.log(formData);
-      let data = {
-        "projectId": formData.projectId || "",
-        "appVersionStr": formData.appVersionStr || "",
-        "positionCodes": formData.positionCodes || "",
-        "isShow": formData.isShow || "",
-        page: self.tablePage,
-        rows: self.tableRows
-      }
-      self.$axios.post(self.searchForm.options.submitUrl, data).then((res) => {
-        self.tableData = res.data.data.rows;
-      }).catch(function(error) {
-        self.$message.error('搜索错误');
+      formData.page = 1;
+      formData.rows = self.tableRows;
+      self.$axios.post(self.searchForm.options.submitUrl, formData).then((res) => {
+          self.tableData = res.data.data.rows;
+          self.$message.success('搜索完成');
+      }).catch(function (error) {
+          self.$message.error('搜索失败');
       });
     },
     positionSelectList(projectId,items){
@@ -371,7 +364,8 @@ export default {
       const self = this;
       self.dialogVisible = false;
       self.$axios.post(self.dialogForm.options.submitUrl, self.dialogFormData).then((res) => {
-        this.getTableData();
+        self.$message.success(res.data.msg);
+        self.getTableData();
       }).catch(function(error) {
         self.$message.error('失败');
       });

@@ -13,7 +13,6 @@
         :child-table-options="tableConfig.tableOptions"
         :child-table-actions="tableConfig.tableActions"
         :child-table-data="tableData"
-        @cellClick="cellClickd"
         @pageChange="pageChanged">
         <!-- 顶部工具栏 -->
   </base-table>
@@ -147,7 +146,7 @@ export default {
         tableOptions: {}
       },
       dataListUrl: '/interface/sys-app-version/examine_sys_app_version_list',
-      examineUrl: '/interface/sys-app-version/examine_sys_app_version.do', //表格全部数据请求地址
+      examineUrl: '/interface/sys-app-version/examine_sys_app_version', //表格全部数据请求地址
       searchFormData: {},
       selectedTableRows:[],//选中的table 行
       tableData: [],//让搜索框的数据赋值到表格
@@ -188,12 +187,6 @@ export default {
       }).then((res) => {
         this.tableData = res.data.data.rows;
       })
-    },
-    cellClickd(value) {//选中单格的事件
-        console.log(value);
-        if(value) {
-            this.$message(value + '');
-        }
     }
   }
 }

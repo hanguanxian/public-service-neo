@@ -54,7 +54,7 @@ export default {
                       {label: "源码私行Android",value: "yuanma_domestic_android"},
                       {label: "源码理财师Android",value: "yuanma_planner_android"}
                   ]},
-                  {name: '推送位置',placeholder: '推送位置',key: 'positionCodes',type: 'select',
+                  {name: '推送位置',placeholder: '推送位置', key: 'positionCodes',type: 'select',
                   selectOptions: [
                       {label: "请选择",value: "-1"},
                       {label: "编辑中",value: "0"},
@@ -74,22 +74,10 @@ export default {
       },
       //弹出框配置
       dialogForm: {
-        items: [{name: '所属项目',placeholder: '所属项目', key: 'projectName',type: 'select',
-        selectOptions:[
-            {label: "请选择",value: "-1"},
-            {label: "源码国际IOS",value: "yuanma_international_ios"},
-            {label: "源码私行IOS",value: "yuanma_domestic_ios"},
-            {label: "源码理财师IOS",value: "yuanma_planner_ios"},
-            {label: "源码国际Android",value: "yuanma_international_android"},
-            {label: "源码私行Android",value: "yuanma_domestic_android"},
-            {label: "源码理财师Android",value: "yuanma_planner_android"}
-        ]}, {name: '推送位置',placeholder: '推送位置',key: 'positionNames',type: 'select',
-        selectOptions: [
-            {label: "请选择",value: "-1"},
-            {label: "编辑中",value: "0"},
-            {label: "审核中",value: "100"},
-            {label: "正式",value: "200"}
-        ]}, {
+        items: [{name: '所属项目',placeholder: '所属项目', key: 'projectId',type: 'select',
+        selectOptions:[]},
+        {name: '推送位置',placeholder: '推送位置', multiple: true, key: 'positionCodes',type: 'select',
+        selectOptions: []}, {
           name: '公告标题',
           key: 'announcementName'
         }, {
@@ -166,6 +154,7 @@ export default {
               console.log(row);
               self.dialogVisible = true;
               self.dialogForm.options.submitUrl = self.updateRowUrl;
+              row.positionCodes = row.positionCodes.split(',');
               self.dialogFormData = JSON.parse(JSON.stringify(row));
             }
           },{
@@ -238,6 +227,7 @@ export default {
               tempArry.push(select);
           }
           self.searchForm.items[1].selectOptions = tempArry;
+          self.dialogForm.items[0].selectOptions = tempArry;
       })
       self.$axios.post('/interface/announcement/position_select_list').then((res) => {
           var selectOptions = res.data.data;
@@ -280,12 +270,12 @@ export default {
       })
     },
     dialogCallBack(value) {//弹出框的提交事件
-      console.log('dialogCallBack');
+      console.log(value);
       const self = this;
 
       self.dialogVisible = false;
-      self.$axios.post(self.dialogForm.options.submitUrl, value).then((res) => {
-          self.$message.success(self.msg);
+      self.$axios.post(self.dialogForm.options.submitUrl, self.dialogFormData).then((res) => {
+          self.$message.success(res.data.msg);
           this.getTableData();
       }).catch(function (error) {
           self.$message.error('失败');

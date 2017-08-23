@@ -10,7 +10,7 @@
                     @row-click="rowClick"
                     @row-dblclick="rowDBClick"
                     :highlight-current-row="true" >
-          <el-table-column type="selection"></el-table-column> <!-- 勾选框 -->
+          <el-table-column type="selection" v-if="options.selection || false"></el-table-column> <!-- 勾选框 -->
           <el-table-column v-for="(column, index) in columns" :key="index" :prop="column.key" :label="column.name" :width="column.width">
               <template scope="scope">
                   <template v-if="column.type == 'image'">

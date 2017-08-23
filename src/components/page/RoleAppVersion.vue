@@ -175,7 +175,7 @@ export default {
         tableActions: {
           name: '操作',
           key: 'actions',
-          width: "240",
+          width: "250",
           fixed: "right",
           buttons: [{
             name: "编辑",
@@ -205,18 +205,21 @@ export default {
             name: "提交审核",
             icon: "fa-clock-o",
             event(row) {
-              console.log(row);
-                self.$axios.post(self.examineUrl, {
-                  appVersionId: row.appVersionId,
-                  enumAppVersionState: 100
-                }).then((res) => {
-                  if (res.data.success == true) {
-                    self.$message.success('审核成功');
-                    self.getTableData();
-                  }
-                }).catch(function(error) {
-                  self.$message.error('系统错误');
-                });
+                if(row.enumAppVersionState == 0) {
+                  self.$axios.post(self.examineUrl, {
+                    appVersionId: row.appVersionId,
+                    enumAppVersionState: 100
+                  }).then((res) => {
+                    if (res.data.success == true) {
+                      self.$message.success('审核成功');
+                      self.getTableData();
+                    }
+                  }).catch(function(error) {
+                    self.$message.error('系统错误');
+                  });
+                } else {
+                  self.$message.error('该状态下不可以提交审核');
+                }
             }
           }]
         },

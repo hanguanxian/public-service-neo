@@ -113,13 +113,13 @@
         background-color: #fffdfd;
     }
     .el-menu .el-menu-item.is-active {
-        background-color: #fff;
+        background-color: #ECFAF9;
     }
     .el-menu>li.el-submenu {
         list-style: none;
         border-bottom: 1px solid #E5E5E5;
     }
-    .el-menu-item, .el-submenu__title {
-
+    .el-menu .el-menu-item:hover {
+        background-color: #ECFAF9;
     }
 </style>

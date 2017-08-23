@@ -48,12 +48,12 @@
         font-size: 22px;
         line-height: 60px;
         color: #fff;
-        background-color: #438EB9;
+        background-color: #1497E0;
     }
     .header .logo{
         float: left;
         width:250px;
-        background-color: #367fa9;
+        background-color: #0986cc;
         text-align: center;
     }
     .user-info {

@@ -102,7 +102,7 @@ export default {
         tableActions: {
           name: '操作',
           key: 'actions',
-          width: "300",
+          width: "160",
           fixed: "right",
           buttons: [{
             name: "同意",

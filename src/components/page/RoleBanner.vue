@@ -213,27 +213,36 @@ export default {
             name: "修改",
             icon: "fa-pencil",
             event(row) {
-              console.log(row);
-              self.dialogVisible = true;
-              self.dialogForm.options.submitUrl = self.updateRowUrl;
-              row.isAppOpen = row.isAppOpen ? 1 : 0;
-              let copyRow = JSON.stringify(row);
-              self.dialogFormData = JSON.parse(copyRow);
+              if(row.isShow) {
+                self.$message.error('已启用的banner图不允许修改！');
+              } else {
+                self.dialogVisible = true;
+                self.dialogForm.options.submitUrl = self.updateRowUrl;
+                self.dialogForm.items[0].disabled = true;
+                row.isAppOpen = row.isAppOpen ? 1 : 0;
+                let copyRow = JSON.stringify(row);
+                self.dialogFormData = JSON.parse(copyRow);
+              }
             }
           }, {
             name: "删除",
             icon: "fa-trash-o",
             event(row) {
-              self.$axios.post("/interface/banner/remove_banner", {
-                autoId: row.autoId
-              }).then((res) => {
-                if (res.data.status == true) {
-                  self.$message.success('删除成功');
-                  self.getTableData();
-                }
-              }).catch(function(error) {
-                self.$message.error('错误');
-              });
+              if(row.isShow) {
+                self.$message.error('已启用的banner图不允许删除！');
+              } else {
+                self.$axios.post("/interface/banner/remove_banner", {
+                  autoId: row.autoId
+                }).then((res) => {
+                  if (res.data.status == true) {
+                    self.$message.success('删除成功');
+                    self.getTableData();
+                  }
+                }).catch(function(error) {
+                  self.$message.error('错误');
+                });
+              }
+
             }
           }, {
             name: "启用",
@@ -274,6 +283,7 @@ export default {
         name: "新建",
         event() {
           self.dialogForm.options.submitUrl = self.newRowUrl;
+          delete self.dialogForm.items[0].disabled;
           self.dialogFormData = {};
           self.dialogVisible = true;
         }

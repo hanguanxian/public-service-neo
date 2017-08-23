@@ -837,7 +837,7 @@
 }
 
 .el-submenu .el-menu-item:hover,.el-submenu__title:hover {
-    background-color: rgb(209, 229, 229)
+    background-color: #ECFAF9;
 }
 
 .el-submenu .el-menu-item {

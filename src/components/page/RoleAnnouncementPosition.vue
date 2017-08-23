@@ -100,6 +100,8 @@ export default {
           event() {
             console.log('新增');
             self.dialogForm.options.submitUrl = self.newRowUrl;
+            delete self.dialogForm.items[0].disabled;
+            delete self.dialogForm.items[1].disabled;
             self.dialogFormData = {};
             self.dialogVisible = true;
           }

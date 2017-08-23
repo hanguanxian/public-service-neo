@@ -135,4 +135,7 @@
     .content .table {
         padding: 10px;
     }
+    .el-table tr:hover{
+        background: #ECFAF9;
+    }
 </style>

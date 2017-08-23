@@ -162,7 +162,7 @@ export default {
         rows: self.tableRows,
       }).then((res) => {
         this.tableData = res.data.data;
-        self.tableConfig.tableOptions.total = res.data.data.count;
+        self.tableConfig.tableOptions.total = res.data.count;
         console.log(self.tableConfig.tableOptions.total);
       })
     },

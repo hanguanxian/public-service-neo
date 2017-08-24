@@ -153,7 +153,7 @@ export default {
             message: '必填',
             trigger: 'blur'
           }, //表单默认校验规则
-          //inline: true, //输入框是否在一行内
+          cancelBtnShow: true,
           labelWidth: "130px",
           submitName: '确定' //提交按钮文字
         }
@@ -209,7 +209,6 @@ export default {
         tableActions: {
           name: '操作',
           key: 'actions',
-          width: "300",
           fixed: "right",
           buttons: [{
             name: "修改",

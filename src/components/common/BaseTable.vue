@@ -44,7 +44,7 @@
                   </template>
               </template>
           </el-table-column>
-          <el-table-column :type="'expand'" resizable :label="tableActions.name" :fixed="tableActions.fixed || true">
+          <el-table-column :type="tableActions.type || 'expand'" :width="tableActions.width || '80px'" resizable :label="tableActions.name || '操作'" :fixed="tableActions.fixed || false">
               <template scope="scope">
                   <div class="tableAction">
                     <!-- <el-menu :mode="horizontal" @open="menuOpen" @close="menuClose" :collapse="true">
@@ -61,7 +61,10 @@
                     </el-menu> -->
                     <el-button v-for="(button, index) in tableActions.buttons"
                          :key="index" size="small"
-                         @click="button.event(scope.row)" class="el-table-button"><i class="menu-icon fa" :class="button.icon"></i>{{ button.name }}</el-button>
+                         @click="button.event(scope.row)" class="el-table-button" type="info">
+                            <!-- <i class="menu-icon fa" :class="button.icon"></i> -->
+                          {{ button.name }}
+                      </el-button>
                   </div>
               </template>
           </el-table-column>
@@ -96,12 +99,6 @@
         created() {
         },
         methods: {
-            menuOpen(val) {//翻页
-              console.log(val);
-            },
-            menuClose(val) {//翻页
-              console.log(val);
-            },
             pageChange(val) {//翻页
               this.$emit('pageChange', val);
             },
@@ -130,5 +127,9 @@
     }
     .el-table .tableAction  {
         text-align: right;
+        padding-right: 50px;
+    }
+    .el-table .el-table__fixed-right, .el-table .el-table__fixed-left {
+        overflow-y: hidden !important;
     }
 </style>

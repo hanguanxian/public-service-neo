@@ -77,15 +77,15 @@ export default {
         }, {
           name: '公告位置名称',
           key: 'positionName'
-        }, {
-          name: '是否启用',
-          key: 'isEnable'
+        // }, {
+        //   name: '是否启用',
+        //   key: 'isEnable'
         }],
         tableActions: {
           name: '操作',
           key: 'actions',
-          width: "80",
-          fixed: "right",
+          type: 'index',
+          width: "80px",
           buttons: [{
             name: "修改",
             icon: "fa-pencil",

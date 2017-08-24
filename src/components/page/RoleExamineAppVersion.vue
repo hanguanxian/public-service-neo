@@ -65,9 +65,11 @@ export default {
           key: 'appVersionId'
         }, {
           name: 'APP类型',
+          width: '210px',
           key: 'appClient'
         }, {
           name: 'APP类型中文',
+          width: '160px',
           key: 'appClientStr'
         }, {
           name: '版本数值',
@@ -93,16 +95,17 @@ export default {
           key: 'appVersionState'
         }, {
           name: '版本备注',
+          width: '120px',
           key: 'remark'
         }, {
           name: '创建时间',
           type: "date",
+          width: '170px',
           key: 'createTime'
         }],
         tableActions: {
           name: '操作',
           key: 'actions',
-          width: "160",
           fixed: "right",
           buttons: [{
             name: "同意",

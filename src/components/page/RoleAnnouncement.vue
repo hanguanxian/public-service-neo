@@ -109,6 +109,7 @@ export default {
       tableConfig: {
         columns: [{
           name: '公告ID',
+          width: "180px",
           key: 'announcementId'
         }, {
           name: '所属项目',
@@ -118,6 +119,8 @@ export default {
           key: 'positionNames'
         }, {
           name: '公告标题',
+          width: "170px",
+          type: 'richText',
           key: 'announcementName'
         }, {
           name: '公告内容',
@@ -141,7 +144,6 @@ export default {
         tableActions: {
           name: '操作',
           key: 'actions',
-          width: "230",
           fixed: "right",
           buttons: [{
             name: "修改",
@@ -253,7 +255,7 @@ export default {
     },
     positionSelectList(projectId,items){
       const self = this;
-      self.$axios.post('/interface/banner/position_select_list', {
+      self.$axios.post('/interface/announcement/position_select_list', {
         projectId: projectId
       }).then((res) => {
         var selectOptions = res.data.data;

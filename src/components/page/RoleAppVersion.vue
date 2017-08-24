@@ -107,10 +107,12 @@ export default {
           key: 'picUrl'
         }, {
           name: 'app地址',
+          rules: {required: false},
           key: 'appUrl'
         }, {
           name: '备注',
           type: 'textarea',
+          rules: {required: false},
           key: 'remark'
         }],
         options: {
@@ -134,9 +136,11 @@ export default {
           key: 'appVersionId'
         }, {
           name: 'APP类型',
+          width: '210px',
           key: 'appClient'
         }, {
           name: 'APP类型中文',
+          width: '160px',
           key: 'appClientStr'
         }, {
           name: '版本数值',
@@ -165,17 +169,17 @@ export default {
         }, {
           name: '版本备注',
           type: 'richText',
-          width: '180px',
+          width: '120px',
           key: 'remark'
         }, {
           name: '创建时间',
+          width: '170px',
           type: "datetime",
           key: 'createTime'
         }],
         tableActions: {
           name: '操作',
           key: 'actions',
-          width: "250",
           fixed: "right",
           buttons: [{
             name: "编辑",

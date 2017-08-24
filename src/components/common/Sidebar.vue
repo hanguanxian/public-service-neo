@@ -5,10 +5,10 @@
             <template v-for="item in userMenu">
                 <template v-if="item.roles">
                     <el-submenu :index="item.menu.menuCode" >
-                        <template slot="title"><i class="fa fa-bars"></i>{{ item.menu.menuName }}</template>
+                        <template slot="title">{{ item.menu.menuName }}</template>
 
                         <el-menu-item v-for="(subItem,i) in item.roles" :key="i" :route="subItem" :index="subItem.roleCode">
-                            <i class="menu-icon fa fa-caret-right"></i>{{ subItem.roleName }}
+                            {{ subItem.roleName }}
                         </el-menu-item>
                     </el-submenu>
                 </template>

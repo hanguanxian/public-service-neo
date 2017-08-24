@@ -23,8 +23,8 @@
             return {
                 formUrl:'/interface/login',
                 ruleForm: {
-                    username: 'SteveJobs',
-                    password: '111111'
+                    username: '',
+                    password: ''
                 },
                 rules: {
                     username: [

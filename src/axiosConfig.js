@@ -15,7 +15,7 @@ axios.defaults.validateStatus = config.validateStatus;
 
 axios.interceptors.response.use(function (response) {
   if(response.status == 403) {
-    window.location.href = window.location.origin + '#login';
+    window.location.href = window.location.origin + window.location.pathname + '#/login';
     return;
   }
   return response;

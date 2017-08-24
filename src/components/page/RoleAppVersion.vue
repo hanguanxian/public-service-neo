@@ -183,15 +183,20 @@ export default {
             event(row) {
               console.log('编辑');
               console.log(row);
-              self.dialogVisible = true;
-              row.isMust = row.isMust ? 1 : 0;
-              self.dialogForm.options.submitUrl = self.updateRowUrl;
-              self.dialogFormData = JSON.parse(JSON.stringify(row));
+              if(row.enumAppVersionState == 0) {
+                self.dialogVisible = true;
+                row.isMust = row.isMust ? 1 : 0;
+                self.dialogForm.options.submitUrl = self.updateRowUrl;
+                self.dialogFormData = JSON.parse(JSON.stringify(row));
+              } else {
+                self.$message.error('该状态下不可以编辑');
+              }
             }
           },{
             name: "删除",
             icon: "fa-trash-o",
             event(row) {
+              if(row.enumAppVersionState == 0) {
                 self.$axios.post(self.deleteRowUrl, {appVersionId: row.appVersionId}).then((res) => {
                   if (res.data.success == true) {
                     self.$message.success('删除成功');
@@ -200,6 +205,9 @@ export default {
                 }).catch(function(error) {
                   self.$message.error('系统错误');
                 });
+              } else {
+                self.$message.error('该状态下不可以删除');
+              }
             }
           }, {
             name: "提交审核",

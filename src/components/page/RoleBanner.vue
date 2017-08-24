@@ -140,6 +140,8 @@ export default {
             key: 'sort'
           }, {
             name: '备注',
+            type: 'textarea',
+            rules: {required: false},
             key: 'remark'
           }
         ],

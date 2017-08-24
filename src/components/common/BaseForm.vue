@@ -37,7 +37,7 @@
             </template>
             <template v-else-if="item.type == 'file'">
                 <el-upload class="uploader" :name="item.formNmae"
-                    :on-change="fileChange(index)" :data="{keys:item.key}" :action="item.action" :on-success="handleSuccess">
+                    :on-change="fileChange(index)" :data="{keys:item.key}" :action="item.action" :on-error="uploadError" :on-success="uploadSuccess">
                     <el-button size="small" type="primary">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip"></div>
                 </el-upload>
@@ -121,7 +121,8 @@ import { quillEditor } from 'vue-quill-editor';//富文本编辑器
             selectedChange(item){
               if(typeof item.event == "function") {
                   if(item.relative) {
-                    delete this.baseForm[item.relative]
+                    delete this.baseForm[item.relative];
+                    //this.baseForm[item.relative] = [];
                   }
                   item.event(this.baseForm[item.key]);
               }
@@ -129,8 +130,10 @@ import { quillEditor } from 'vue-quill-editor';//富文本编辑器
             fileChange(index){
                 this.items[index].active = true;
             },
-            handleSuccess(res, file, fileList){
-                //console.log(file);
+            uploadError(err, file, fileList){
+                self.$message.error('上传失败');
+            },
+            uploadSuccess(res, file, fileList){
                 let self = this;
                 self.items.filter(function(item,index) {
                     if(item.active) {

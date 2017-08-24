@@ -42,6 +42,12 @@ export default {
         }, {
           name: 'banner图位置名称',
           key: 'positionName'
+        // }, {
+        //   name: '是否启用',
+        //   type: 'select',
+        //   selectOptions: [{"label": '是','value':1},{"label": '否','value':0}],
+        //   rules: {type: 'number',required: true,message: '必填',trigger: 'blur'},
+        //   key: 'isEnable'
         }],
         options: {
           submitUrl: "/interface/act/add_act_vip_append.do", //新建的链接
@@ -154,7 +160,12 @@ export default {
       const self = this;
       self.dialogVisible = false;
       self.$axios.post(self.dialogForm.options.submitUrl, self.dialogFormData).then((res) => {
-          this.getTableData();
+        if(res.data.success) {
+          self.$message.success(res.data.msg);
+          self.getTableData();
+        } else {
+          self.$message.error(res.data.msg);
+        }
       }).catch(function (error) {
           self.$message.error('失败');
       });

@@ -153,7 +153,6 @@ export default {
             message: '必填',
             trigger: 'blur'
           }, //表单默认校验规则
-          cancelBtnShow: true,
           labelWidth: "130px",
           submitName: '确定' //提交按钮文字
         }

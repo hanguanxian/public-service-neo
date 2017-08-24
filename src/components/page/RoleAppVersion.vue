@@ -118,7 +118,6 @@ export default {
         options: {
           submitUrl: "/interface/sys-app-version/add_act_vip_append", //新建的链接
           submitRow: true,//提交按钮是否单独占一行
-          cancelBtnShow: true,
           defaultRules: {
             required: true,
             message: '必填',

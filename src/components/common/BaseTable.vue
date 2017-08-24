@@ -11,7 +11,7 @@
                     @row-dblclick="rowDBClick"
                     :highlight-current-row="true" >
           <el-table-column type="selection" v-if="options.selection || false"></el-table-column> <!-- 勾选框 -->
-          <el-table-column v-for="(column, index) in columns" :key="index" :prop="column.key" :label="column.name" :width="column.width">
+          <el-table-column v-for="(column, index) in columns" :key="index" resizable :prop="column.key" :label="column.name" :width="column.width">
               <template scope="scope">
                   <template v-if="column.type == 'image'">
                       <a :href="scope.row[column.key]" target="_blank">
@@ -44,12 +44,24 @@
                   </template>
               </template>
           </el-table-column>
-          <el-table-column :label="tableActions.name" :width="tableActions.width" :fixed="tableActions.fixed">
+          <el-table-column :type="'expand'" resizable :label="tableActions.name" :fixed="tableActions.fixed || true">
               <template scope="scope">
                   <div class="tableAction">
-                     <el-button v-for="(button, index) in tableActions.buttons"
-                          :key="index" size="small"
-                          @click="button.event(scope.row)" class="el-table-button"><i class="menu-icon fa" :class="button.icon"></i>{{ button.name }}</el-button>
+                    <!-- <el-menu :mode="horizontal" @open="menuOpen" @close="menuClose" :collapse="true">
+                       <el-submenu index="1">
+                         <template slot="title">
+                          <i class="el-icon-message"></i>
+                          <span slot="title">操作</span>
+                        </template>
+                         <el-menu-item v-for="(button, index) in tableActions.buttons"
+                              :key="index" @click="button.event(scope.row)">
+                                <i class="menu-icon fa" :class="button.icon"></i>
+                                <span slot="title">{{ button.name }}</span>
+                        </el-menu-item>
+                    </el-menu> -->
+                    <el-button v-for="(button, index) in tableActions.buttons"
+                         :key="index" size="small"
+                         @click="button.event(scope.row)" class="el-table-button"><i class="menu-icon fa" :class="button.icon"></i>{{ button.name }}</el-button>
                   </div>
               </template>
           </el-table-column>
@@ -84,6 +96,12 @@
         created() {
         },
         methods: {
+            menuOpen(val) {//翻页
+              console.log(val);
+            },
+            menuClose(val) {//翻页
+              console.log(val);
+            },
             pageChange(val) {//翻页
               this.$emit('pageChange', val);
             },
@@ -110,7 +128,7 @@
     .el-table-button {
         margin: 5px;
     }
-    .el-table .cell .tableAction  {
-        text-align: left;
+    .el-table .tableAction  {
+        text-align: right;
     }
 </style>

@@ -70,7 +70,6 @@
     	    	}
 
     	    	var addNewTab = true;
-
     	    	vm.editableTabs.forEach(function(tab,index){
 	          		if (tab.path === path) {
 	          			vm.$store.dispatch('changeTabactiveindex', index);
@@ -85,6 +84,7 @@
 	    	    	vm.$store.dispatch('changeTabactiveindex', tabsLength);
 	    	    	vm.$store.dispatch('changeCurrentView', path);
     	    	}
+
     	    }
         }
     }

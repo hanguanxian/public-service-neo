@@ -11,9 +11,7 @@
                 :label="item.title" :name="item.name" :key="item.name"
               >
               </el-tab-pane>
-              <keep-alive>
-                   <component :is='currentView'></component>
-              </keep-alive>
+              <component :is='currentView'></component>
              </el-tabs>
           </el-col>
         </div>
@@ -49,7 +47,6 @@
     export default {
         data () {
           	return {
-
           	};
         },
         computed: {

@@ -44,27 +44,30 @@
                   </template>
               </template>
           </el-table-column>
-          <el-table-column :type="tableActions.type || 'expand'" :width="tableActions.width || '80px'" resizable :label="tableActions.name || '操作'" :fixed="tableActions.fixed || false">
+          <el-table-column :type="tableActions.type" :width="tableActions.width || '80px'" resizable :label="tableActions.name || '操作'" :fixed="tableActions.fixed || false">
               <template scope="scope">
                   <div class="tableAction">
-                    <!-- <el-menu :mode="horizontal" @open="menuOpen" @close="menuClose" :collapse="true">
-                       <el-submenu index="1">
-                         <template slot="title">
-                          <i class="el-icon-message"></i>
-                          <span slot="title">操作</span>
-                        </template>
-                         <el-menu-item v-for="(button, index) in tableActions.buttons"
-                              :key="index" @click="button.event(scope.row)">
-                                <i class="menu-icon fa" :class="button.icon"></i>
-                                <span slot="title">{{ button.name }}</span>
-                        </el-menu-item>
-                    </el-menu> -->
-                    <el-button v-for="(button, index) in tableActions.buttons"
-                         :key="index" size="small"
-                         @click="button.event(scope.row)" class="el-table-button" type="info">
-                            <!-- <i class="menu-icon fa" :class="button.icon"></i> -->
-                          {{ button.name }}
-                      </el-button>
+                    <template v-if="tableActions.buttons.length > 1">
+                      <el-popover ref="popover" placement="left" :width="tableActions.buttons.length * 68" trigger="click">
+                        <div>
+                          <el-button v-for="(button, index) in tableActions.buttons"
+                               :key="index" size="small"
+                               @click="button.event(scope.row)" class="el-table-button" type="info">
+                                  <!-- <i class="menu-icon fa" :class="button.icon"></i> -->
+                                {{ button.name }}
+                            </el-button>
+                        </div>
+                      </el-popover>
+                      <el-button size="small" type="info" v-popover:popover>操作</el-button>
+                    </template>
+                    <template v-else>
+                      <el-button v-for="(button, index) in tableActions.buttons"
+                           :key="index" size="small"
+                           @click="button.event(scope.row)" class="el-table-button" type="info">
+                              <!-- <i class="menu-icon fa" :class="button.icon"></i> -->
+                            {{ button.name }}
+                        </el-button>
+                    </template>
                   </div>
               </template>
           </el-table-column>
@@ -121,13 +124,12 @@
         }
     }
 </script>
-<style scoped>
+<style>
     .el-table-button {
-        margin: 5px;
+        margin: 0 5px;
     }
     .el-table .tableAction  {
-        text-align: right;
-        padding-right: 50px;
+        text-align: center;
     }
     .el-table .el-table__fixed-right, .el-table .el-table__fixed-left {
         overflow-y: hidden !important;

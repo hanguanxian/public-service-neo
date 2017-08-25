@@ -14,5 +14,5 @@ export default {
   },
   [types.CHANGE_CURRENTVIEW] (state, path) {
     state.currentView = path
-  },
+  }
 };

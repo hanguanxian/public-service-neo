@@ -173,6 +173,7 @@ export default {
       formData.rows = self.tableRows;
       self.$axios.post(self.searchForm.options.submitUrl, formData).then((res) => {
           self.tableData = res.data.data.rows;
+          self.tableConfig.tableOptions.total = res.data.data.count;
       }).catch(function (error) {
           self.$message.error('搜索失败');
       });

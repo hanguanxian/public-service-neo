@@ -5,5 +5,4 @@
 </template>
 <style>
     @import "../static/css/main.css";
-    @import "../static/css/font-awesome.min.css";
 </style>

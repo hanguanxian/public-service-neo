@@ -126,9 +126,6 @@ export default {
             name: 'ios关键字',
             key: 'iosKey'
           }, {
-            name: '版本编码',
-            key: 'appVersionStr'
-          }, {
             name: '排序',
             type: 'number',
             rules: {
@@ -138,6 +135,10 @@ export default {
               trigger: 'blur'
             },
             key: 'sort'
+          }, {
+            name: '版本编码',
+            rules: {required: false},
+            key: 'appVersionStr'
           }, {
             name: '备注',
             type: 'textarea',
@@ -379,8 +380,12 @@ export default {
       const self = this;
       self.dialogVisible = false;
       self.$axios.post(self.dialogForm.options.submitUrl, self.dialogFormData).then((res) => {
-        self.$message.success(res.data.msg);
-        self.getTableData();
+        if(res.data.success || res.data.status) {
+          self.$message.success(res.data.msg);
+          self.getTableData();
+        } else {
+          self.$message.error(res.data.msg);
+        }
       }).catch(function(error) {
         self.$message.error('失败');
       });

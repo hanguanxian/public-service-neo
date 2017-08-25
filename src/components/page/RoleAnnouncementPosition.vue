@@ -179,7 +179,7 @@ export default {
       const self = this;
       self.dialogVisible = false;
       self.$axios.post(self.dialogForm.options.submitUrl, self.dialogFormData).then(function(res){
-          if(res.data.success) {
+          if(res.data.success || res.data.status) {
             self.$message.success(res.data.msg);
             self.getTableData();
           } else {

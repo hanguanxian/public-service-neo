@@ -149,12 +149,15 @@ export default {
             name: "修改",
             icon: "fa-pencil",
             event(row) {
-              console.log(row);
-              self.dialogVisible = true;
-              self.dialogForm.options.submitUrl = self.updateRowUrl;
-              row.positionCodes = row.positionCodes.split(',')[0] || '';
-              //row.positionCodes = row.positionCodes.split(',') || [];
-              self.dialogFormData = JSON.parse(JSON.stringify(row));
+              if(row.isEnable == true) {
+                self.$message.error('已经启用状态不可以编辑');
+              } else {
+                self.dialogVisible = true;
+                self.dialogForm.options.submitUrl = self.updateRowUrl;
+                row.positionCodes = row.positionCodes.split(',')[0] || '';
+                //row.positionCodes = row.positionCodes.split(',') || [];
+                self.dialogFormData = JSON.parse(JSON.stringify(row));
+              }
             }
           },{
             name: "启用",

@@ -222,7 +222,7 @@ export default {
                     enumAppVersionState: 100
                   }).then((res) => {
                     if (res.data.success == true) {
-                      self.$message.success('审核成功');
+                      self.$message.success('提交审核成功');
                       self.getTableData();
                     }
                   }).catch(function(error) {

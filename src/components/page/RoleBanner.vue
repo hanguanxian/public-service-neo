@@ -118,12 +118,15 @@ export default {
             ]
           }, {
             name: '外跳链接',
+            rules: {required: false},
             key: 'h5Url'
           }, {
             name: '安卓关键字',
+            rules: {required: false},
             key: 'androidKey'
           }, {
             name: 'ios关键字',
+            rules: {required: false},
             key: 'iosKey'
           }, {
             name: '排序',
@@ -249,6 +252,10 @@ export default {
             name: "启用",
             icon: "fa-check",
             event(row) {
+              if(row.isShow) {
+                self.$message.error('已经启用过');
+                return false;
+              }
               self.$axios.post("/interface/banner/use_banner", {
                 autoId: row.autoId
               }).then((res) => {

@@ -16,7 +16,7 @@
                   <quill-editor ref="myTextEditor" v-model="baseForm[item.key]"></quill-editor>
             </template>
             <template v-else-if="item.type == 'number'">
-                  <el-input-number style="vertical-align: middle;" :debounce="800" v-model="baseForm[item.key]" :controls="false" :placeholder="options.showPlaceholder == false ? '' : item.placeholder"></el-input-number>
+                  <el-input-number style="vertical-align: middle;" v-model="baseForm[item.key]" :controls="false" :placeholder="options.showPlaceholder == false ? '' : item.placeholder"></el-input-number>
             </template>
             <template v-else-if="item.type == 'radio'">
                   <el-radio-group v-model="baseForm[item.key]">

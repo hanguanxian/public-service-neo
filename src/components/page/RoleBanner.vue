@@ -193,9 +193,11 @@ export default {
           key: 'h5Url'
         }, {
           name: '安卓关键字',
+          type: 'href',
           key: 'androidKey'
         }, {
           name: 'ios关键字',
+          type: 'href',
           key: 'iosKey'
         }, {
           name: '排序',

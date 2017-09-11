@@ -35,6 +35,10 @@
                         </el-option>
                   </el-select>
             </template>
+            <template v-else-if="item.type == 'cascader'">
+                  <el-cascader v-model="baseForm[item.key]" :options="item.selectOptions" :disabled="item.disabled || false"  @change="selectedChange(item)" clearable :placeholder="options.showPlaceholder == false ? '' : item.placeholder">
+                  </el-cascader>
+            </template>
             <template v-else-if="item.type == 'file'">
                 <el-upload class="uploader" :name="item.formNmae"
                     :on-change="fileChange(index)" :data="{keys:item.key}" :action="item.action" :on-error="uploadError" :on-success="uploadSuccess">
